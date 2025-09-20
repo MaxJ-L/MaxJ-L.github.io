@@ -317,7 +317,9 @@ jobs:
 
 
 
+### 感谢
 
+[如何用 GitHub Pages + Hugo 搭建个人博客 · KrislinBlog](https://krislinzhao.github.io/docs/create-a-wesite-using-github-pages-and-hugo/#4-使用-hugo-创建网站)
 
 
 
