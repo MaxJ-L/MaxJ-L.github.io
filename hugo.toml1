@@ -26,4 +26,6 @@ title = 'The MaxJ Stack'
   url = "/tags/"
   weight = 30
 
-
+[[taxonomies.params]]
+  series = 'series'
+  

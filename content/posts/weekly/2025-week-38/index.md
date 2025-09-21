@@ -14,4 +14,4 @@ summary= "第38周周报"
 - [x] BLOG搭建
   - [x] Github Pages + Hugo 初始化
   - [x] PaperMod主题配置
-  - [x] 归档、搜索、TAG功能配置
+  - [x] 首页、归档、搜索、TAG等功能配置

@@ -8,7 +8,7 @@
 <title>GithubPages搭建个人博客教程 | The MaxJ Stack</title>
 <meta name="keywords" content="博客搭建">
 <meta name="description" content="Hugo &#43; GitHub Pages 博客搭建全攻略：从入门到自动化部署（含踩坑笔记）">
-<meta name="author" content="">
+<meta name="author" content="MaxJ-L">
 <link rel="canonical" href="http://localhost:1313/posts/githubpages%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%95%99%E7%A8%8B/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.a5a528d13f8d3c68ee890d8e25b5ca6ed04936a57d0603a745e75a4ab6ce5944.css" integrity="sha256-paUo0T&#43;NPGjuiQ2OJbXKbtBJNqV9BgOnRedaSrbOWUQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
@@ -120,14 +120,54 @@
 
 <article class="post-single">
   <header class="post-header">
-    
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       GithubPages搭建个人博客教程
     </h1>
-    <div class="post-meta"><span title='2025-09-21 02:33:41 +0800 CST'>September 21, 2025</span>
+    <div class="post-meta"><span title='2025-09-21 02:33:41 +0800 CST'>September 21, 2025</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;MaxJ-L
 
 </div>
-  </header> 
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%88%9d%e5%a7%8b%e5%8c%96github-pages%e5%92%8chugo" aria-label="初始化Github Pages和Hugo">初始化Github Pages和Hugo</a></li>
+                <li>
+                    <a href="#%e4%b8%bb%e9%a2%98%e5%ae%89%e8%a3%85%e4%b8%8e%e6%a0%b8%e5%bf%83%e9%85%8d%e7%bd%ae" aria-label="主题安装与核心配置">主题安装与核心配置</a><ul>
+                        
+                <li>
+                    <a href="#%e4%b8%bb%e9%a2%98%e5%ae%89%e8%a3%85" aria-label="主题安装">主题安装</a></li>
+                <li>
+                    <a href="#%e6%a0%b8%e5%bf%83%e9%85%8d%e7%bd%ae" aria-label="核心配置">核心配置</a></li>
+                <li>
+                    <a href="#hugo-%e6%9c%ac%e5%9c%b0%e8%b0%83%e8%af%95" aria-label="Hugo 本地调试">Hugo 本地调试</a></li></ul>
+                </li>
+                <li>
+                    <a href="#push%e5%88%b0%e8%bf%9c%e7%a8%8b%e4%bb%93%e5%ba%93%e5%b9%b6%e4%b8%94%e5%ae%9e%e7%8e%b0cicd%e8%87%aa%e5%8a%a8%e5%8c%96%e9%83%a8%e7%bd%b2" aria-label="PUSH到远程仓库并且实现CI/CD自动化部署">PUSH到远程仓库并且实现CI/CD自动化部署</a><ul>
+                        
+                <li>
+                    <a href="#push%e5%88%b0%e8%bf%9c%e7%a8%8b%e4%bb%93%e5%ba%93" aria-label="push到远程仓库">push到远程仓库</a></li>
+                <li>
+                    <a href="#github-actions%e8%87%aa%e5%8a%a8%e5%8c%96%e9%83%a8%e7%bd%b2" aria-label="Github Actions自动化部署">Github Actions自动化部署</a><ul>
+                        
+                <li>
+                    <a href="#%e6%96%b9%e6%a1%881-%e6%89%8b%e5%8a%a8%e5%88%9b%e5%bb%ba%e6%96%87%e4%bb%b6" aria-label="方案1 手动创建文件">方案1 手动创建文件</a></li>
+                <li>
+                    <a href="#%e6%96%b9%e6%a1%882-%e9%a1%b5%e9%9d%a2%e9%85%8d%e7%bd%ae" aria-label="方案2 页面配置">方案2 页面配置</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#%e6%84%9f%e8%b0%a2" aria-label="感谢">感谢</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
   <div class="post-content"><p><strong>技术栈</strong>：<code>Hugo</code> + <code>Git</code> + <code>GitHub Pages</code> + <code>GitHub Actions</code></p>
 <p><strong>主题</strong>：<code>PaperMod Theme</code></p>
 <h3 id="初始化github-pages和hugo">初始化Github Pages和Hugo<a hidden class="anchor" aria-hidden="true" href="#初始化github-pages和hugo">#</a></h3>
@@ -155,11 +195,11 @@ git clone https://github.com/MaxJ-L/MaxJ-L.github.io.git
 </ul>
 <p>使用以下命令在当前目录进行初始化</p>
 <blockquote>
-<p>一般其实采用hugo new site <!-- raw HTML omitted -->进行初始化</p>
+<p>一般其实采用hugo new site <BLOG NAME>进行初始化</p>
 <p>但是实际操作发现以下冲突：</p>
 <ol>
 <li>git clone会自动创建文件夹；</li>
-<li>hugo new site <!-- raw HTML omitted --> 会自动创建BLOG NAME的文件夹；</li>
+<li>hugo new site <BLOG NAME> 会自动创建BLOG NAME的文件夹；</li>
 </ol>
 <p>以上这两个文件夹会冲突（clone不允许同名文件夹、如果不在根目录new site，会导致无法正常现实）</p>
 <p>当然其实这些问题肯定可以通过配置其他文件进行规避的，但是修改和熟悉成本就高很多了</p></blockquote>
@@ -372,6 +412,14 @@ jobs:
     <ul class="post-tags">
       <li><a href="http://localhost:1313/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a></li>
     </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/weekly/2025-week-38/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>2025 Week 38</span>
+  </a>
+</nav>
+
   </footer>
 </article>
     </main>
@@ -444,6 +492,53 @@ jobs:
         }
     })
 
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
 </script>
 </body>
 

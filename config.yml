@@ -1,0 +1,89 @@
+# --- 基础配置 ---
+baseURL: "https://MaxJ-L.github.io/"
+title: "The MaxJ Stack" # 网站标题，会显示在浏览器标签页和网站左上角
+languageCode: "zh-CN"    # 网站主要语言
+theme: PaperMod         # 使用的主题，注意YAML格式这里是单个值
+enableRobotsTXT: true    # 允许搜索引擎爬取
+
+# --- 内容配置 ---
+pagination.pagerSize: 5              # 列表页每页显示 5 篇文章
+enableEmoji: true        # 启用 Emoji 表情支持
+
+# --- 导航栏菜单配置 ---
+menu:
+  main:
+    - identifier: archives
+      name: "归档"         # 显示“归档”
+      url: "/archives/"
+      weight: 10
+    - identifier: search
+      name: "搜索"         # 显示“搜索”
+      url: "/search/"
+      weight: 20
+    - identifier: tags
+      name: "标签"         # 显示“标签”
+      url: "/tags/"
+      weight: 30
+
+# --- 输出配置 (为了搜索功能) ---
+outputs:
+  home:
+    - "HTML"
+    - "RSS"
+    - "JSON"
+
+# --- 分类法配置 (启用 Series) ---
+taxonomies:
+  category: "categories"
+  tag: "tags"
+  series: "series" # 确保 series 被定义为一个分类法
+
+# --- 主题参数 (Theme Params) ---
+# 这是 PaperMod 主题的所有功能开关
+params:
+  defaultTheme: "auto" # 默认主题：auto (自动), dark, light
+  description: "MaxJ's personal blog about Android, technology, and learning."
+  author: "MaxJ-L"
+
+  # --- 文章页面显示设置 ---
+  ShowReadingTime: true      # 显示阅读时间
+  # ShowShareButtons: true     # 显示分享按钮
+  ShowPostNavLinks: true     # 显示“上一篇/下一篇”文章导航
+  ShowCodeCopyButtons: true  # 显示代码块的复制按钮
+  ShowBreadCrumbs: true      # 显示面包屑导航
+  ShowToc: true              # 显示文章目录 (TOC)
+  TocOpen: false             # 默认不展开文章目录
+  
+  # --- 关键：确保 Series 功能显示 ---
+  ShowSeries: true           # 确保“系列文章”导航框会显示
+
+  # --- 主页配置：使用“简介模式” (Profile Mode) ---
+  profileMode:
+    enabled: true
+    title: "The MaxJ Stack"
+    subtitle: "🚀 我思故我在"
+    # imageUrl: "/images/avatar.png" # 示例头像，请将你的头像文件放在 static/images/avatar.png
+    # imageTitle: "我的头像"
+    imageWidth: 120
+    imageHeight: 120
+    buttons:
+      - name: "文章"
+        url: "/posts"
+      - name: "标签"
+        url: "/tags"
+
+  # --- 社交链接 ---
+  socialIcons:
+    - name: "github"
+      url: "https://github.com/MaxJ-L"
+    # 你可以在这里添加更多社交链接，比如 Bilibili, Twitter, LinkedIn 等
+    # - name: "bilibili"
+    #   url: "你的B站链接"
+
+# --- Markdown 解析器配置 ---
+markup:
+  highlight:
+    noClasses: false
+  goldmark:
+    renderer:
+      unsafe: true # 允许在 Markdown 中使用原始 HTML
