@@ -1,4 +1,5 @@
 +++
+
 date = '2025-09-21T02:33:41+08:00'
 draft = false
 title = 'GithubPages搭建个人博客教程'
@@ -167,7 +168,7 @@ layout: "search"
 hugo server
 ```
 
-如果显示如下，则说明没有错误，打开http://localhost:1313/即可；
+如果显示如下，则说明没有错误，打开 http://localhost:1313/ 即可；
 
 如果有语法错误，会有提示；
 
