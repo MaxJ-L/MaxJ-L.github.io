@@ -27,7 +27,7 @@ summary= "Hugo + GitHub Pages 博客搭建全攻略：从入门到自动化部�
 
 + 克隆仓库
 
-```bash
+```
 git clone <仓库地址>
 git clone https://github.com/MaxJ-L/MaxJ-L.github.io.git
 ```
@@ -62,7 +62,7 @@ hugo new site . --force
 
 初始化之后，会出现以下目录
 
-```bash
+```
 MaxJ-L.github.io.git
 ├─archetypes           // 内容模板文件夹。运行 `hugo new` 时，会使用这里的模板来创建新文件
 │      default.md      // 内容“模板”，运行 `hugo new` 时会基于此文件创建新文章的结构。
@@ -93,12 +93,12 @@ hugo.toml              // 网站的“大脑”，最重要的全局配置文件
 
 2. 我使用推荐的方法2进行安装
 
-```bash
+```
 git submodule add --depth=1 https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod
 git submodule update --init --recursive # needed when you reclone your repo (submodules may not get cloned automatically)
 ```
 
-```bash
+```
 git submodule update --remote --merge
 ```
 
@@ -108,7 +108,7 @@ git submodule update --remote --merge
 
 1. hugo.toml
 
-```yaml
+```
 baseURL = "https://MaxJ-L.github.io/"  ## 这里是你的仓库Github Pages地址
 languageCode = 'zh-CN'   ## 这里配置成对应的语言
 theme = 'PaperMod'   ## 这里配置成你选中的主题，我这里选择了PaperMod
@@ -141,7 +141,7 @@ title = 'The MaxJ-L Stack'  ## 这里是BLOG的标题
 
 2. 在content下面创建`archives.md`和`search.md`，然后补充内容
 
-```markdown
+```
 ---
 title: "Archives"
 layout: "archives"
@@ -150,7 +150,7 @@ layout: "archives"
 ---
 ```
 
-```markdown
+```
 ---
 title: "Search"
 layout: "search"
@@ -163,7 +163,7 @@ layout: "search"
 
 #### Hugo 本地调试
 
-```bash
+```
 hugo server
 ```
 
@@ -198,7 +198,7 @@ Press Ctrl+C to stop
 
 #### push到远程仓库
 
-```bash
+```
 git add .
 git commit -m "First Add"
 git push origin main
@@ -213,7 +213,7 @@ git push origin main
 1. 根目录手动创建文件`.github/workflows/hugo.yml`
 2. 填充以下内容
 
-```yaml
+```
 # Sample workflow for building and deploying a Hugo site to GitHub Pages
 name: Deploy Hugo site to Pages
 

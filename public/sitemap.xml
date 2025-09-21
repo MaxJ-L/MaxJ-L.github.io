@@ -2,16 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/posts/githubpages%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%95%99%E7%A8%8B/</loc>
-    <lastmod>2025-09-21T02:33:41+08:00</lastmod>
+    <loc>http://localhost:1313/posts/weekly/2025-week-38/</loc>
+    <lastmod>2025-09-21T11:30:27+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2025-09-21T02:33:41+08:00</lastmod>
+    <lastmod>2025-09-21T11:30:27+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2025-09-21T02:33:41+08:00</lastmod>
+    <lastmod>2025-09-21T11:30:27+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/</loc>
+    <lastmod>2025-09-21T11:30:27+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/%E5%91%A8%E6%8A%A5/</loc>
+    <lastmod>2025-09-21T11:30:27+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/githubpages%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%95%99%E7%A8%8B/</loc>
     <lastmod>2025-09-21T02:33:41+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>

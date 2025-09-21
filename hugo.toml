@@ -2,7 +2,7 @@ name ='The MaxJ-L Stack'
 baseURL = "https://MaxJ-L.github.io/"
 languageCode = 'zh-CN'
 theme = 'PaperMod'
-title = 'The MaxJ-L Stack'
+title = 'The MaxJ Stack'
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]
@@ -25,3 +25,5 @@ title = 'The MaxJ-L Stack'
   name = "标签"
   url = "/tags/"
   weight = 30
+
+

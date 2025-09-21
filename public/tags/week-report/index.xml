@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Week Report on The MaxJ-L Stack</title>
+    <link>http://localhost:1313/tags/week-report/</link>
+    <description>Recent content in Week Report on The MaxJ-L Stack</description>
+    <generator>Hugo -- 0.147.7</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 21 Sep 2025 11:30:27 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/week-report/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2025 Week 38</title>
+      <link>http://localhost:1313/posts/weekly/2025-week-38/</link>
+      <pubDate>Sun, 21 Sep 2025 11:30:27 +0800</pubDate>
+      <guid>http://localhost:1313/posts/weekly/2025-week-38/</guid>
+      <description>第38周周报</description>
+    </item>
+  </channel>
+</rss>
