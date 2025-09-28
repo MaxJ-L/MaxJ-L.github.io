@@ -61,7 +61,7 @@ params:
   profileMode:
     enabled: true
     title: "The MaxJ Stack"
-    subtitle: "🚀 我思故我在"
+    subtitle: "💡我思故我在 --- 笛卡尔"
     # imageUrl: "/images/avatar.png" # 示例头像，请将你的头像文件放在 static/images/avatar.png
     # imageTitle: "我的头像"
     imageWidth: 120

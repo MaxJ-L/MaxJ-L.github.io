@@ -6,12 +6,33 @@
     <description>Recent content in Tags on The MaxJ Stack</description>
     <generator>Hugo -- 0.147.7</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 21 Sep 2025 11:30:27 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 28 Sep 2025 22:28:18 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AOSP</title>
+      <link>http://localhost:1313/tags/aosp/</link>
+      <pubDate>Sun, 28 Sep 2025 22:28:18 +0800</pubDate>
+      <guid>http://localhost:1313/tags/aosp/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>WSL2</title>
+      <link>http://localhost:1313/tags/wsl2/</link>
+      <pubDate>Sun, 28 Sep 2025 22:28:18 +0800</pubDate>
+      <guid>http://localhost:1313/tags/wsl2/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>编译</title>
+      <link>http://localhost:1313/tags/%E7%BC%96%E8%AF%91/</link>
+      <pubDate>Sun, 28 Sep 2025 22:28:18 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%BC%96%E8%AF%91/</guid>
+      <description></description>
+    </item>
     <item>
       <title>周报</title>
       <link>http://localhost:1313/tags/%E5%91%A8%E6%8A%A5/</link>
-      <pubDate>Sun, 21 Sep 2025 11:30:27 +0800</pubDate>
+      <pubDate>Sun, 28 Sep 2025 08:30:00 +0800</pubDate>
       <guid>http://localhost:1313/tags/%E5%91%A8%E6%8A%A5/</guid>
       <description></description>
     </item>

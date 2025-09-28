@@ -6,8 +6,15 @@
     <description>Recent content on The MaxJ Stack</description>
     <generator>Hugo -- 0.147.7</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 28 Sep 2025 08:30:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 28 Sep 2025 22:28:18 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>WLS2编译AOSP笔记</title>
+      <link>http://localhost:1313/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Sun, 28 Sep 2025 22:28:18 +0800</pubDate>
+      <guid>http://localhost:1313/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/</guid>
+      <description>WSL2编译AOSP的笔记</description>
+    </item>
     <item>
       <title>2025 Week 39</title>
       <link>http://localhost:1313/posts/weekly/2025-week-39/</link>
