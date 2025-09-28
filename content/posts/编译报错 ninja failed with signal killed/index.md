@@ -62,7 +62,7 @@ echo '/var/swapfile swap swap defaults 0 0' >> /etc/fstab
 free -m
 ```
 
-![image](assets/image-20240922035227-c8f857f.png)
+
 
 ```bash
 FAILED: out/soong/.intermediates/external/crosvm/devices/libdevices/android_arm64_armv8-a_rlib_rlib-std_apex10000/7911d933735aaf6db37b7bd96172f083/libdevices.rlib
