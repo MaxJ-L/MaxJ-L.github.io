@@ -2,51 +2,57 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/tags/aosp/</loc>
+    <loc>http://localhost:50159/tags/aosp/</loc>
+    <lastmod>2025-10-01T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:50159/tags/avd/</loc>
+    <lastmod>2025-10-01T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:50159/posts/</loc>
+    <lastmod>2025-10-01T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:50159/tags/</loc>
+    <lastmod>2025-10-01T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:50159/</loc>
+    <lastmod>2025-10-01T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:50159/posts/%E8%87%AA%E5%AE%9A%E4%B9%89avd%E9%95%9C%E5%83%8F%E6%90%AD%E5%BB%BA%E5%92%8Cavd%E4%B8%8E%E4%B8%BB%E6%9C%BAudp%E9%80%9A%E4%BF%A1/</loc>
+    <lastmod>2025-10-01T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:50159/tags/wsl2/</loc>
     <lastmod>2025-09-28T22:28:30+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>http://localhost:50159/tags/%E7%BC%96%E8%AF%91/</loc>
     <lastmod>2025-09-28T22:28:30+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>http://localhost:50159/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-ninja-failed-with-signal-killed/</loc>
     <lastmod>2025-09-28T22:28:30+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2025-09-28T22:28:30+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/wsl2/</loc>
-    <lastmod>2025-09-28T22:28:30+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/%E7%BC%96%E8%AF%91/</loc>
-    <lastmod>2025-09-28T22:28:30+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-ninja-failed-with-signal-killed/</loc>
-    <lastmod>2025-09-28T22:28:30+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/</loc>
+    <loc>http://localhost:50159/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2025-09-28T22:28:18+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/weekly/2025-week-39/</loc>
+    <loc>http://localhost:50159/posts/weekly/2025-week-39/</loc>
     <lastmod>2025-09-28T08:30:00+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/%E5%91%A8%E6%8A%A5/</loc>
+    <loc>http://localhost:50159/tags/%E5%91%A8%E6%8A%A5/</loc>
     <lastmod>2025-09-28T08:30:00+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/weekly/2025-week-38/</loc>
+    <loc>http://localhost:50159/posts/weekly/2025-week-38/</loc>
     <lastmod>2025-09-21T11:30:27+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/githubpages%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%95%99%E7%A8%8B/</loc>
+    <loc>http://localhost:50159/posts/githubpages%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%95%99%E7%A8%8B/</loc>
     <lastmod>2025-09-21T02:33:41+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
+    <loc>http://localhost:50159/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
     <lastmod>2025-09-21T02:33:41+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/archives/</loc>
+    <loc>http://localhost:50159/archives/</loc>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>http://localhost:50159/categories/</loc>
   </url><url>
-    <loc>http://localhost:1313/search/</loc>
+    <loc>http://localhost:50159/search/</loc>
   </url><url>
-    <loc>http://localhost:1313/series/</loc>
+    <loc>http://localhost:50159/series/</loc>
   </url>
 </urlset>

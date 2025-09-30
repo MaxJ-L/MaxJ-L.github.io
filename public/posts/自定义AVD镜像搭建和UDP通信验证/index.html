@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>自定义AVD镜像搭建和AVD与主机UDP通信 | The MaxJ Stack</title>
+<meta name="keywords" content="AOSP, AVD">
+<meta name="description" content="使用自编译的AVD镜像，并验证与主机的UDP通信">
+<meta name="author" content="MaxJ-L">
+<link rel="canonical" href="http://localhost:1313/posts/%E8%87%AA%E5%AE%9A%E4%B9%89avd%E9%95%9C%E5%83%8F%E6%90%AD%E5%BB%BA%E5%92%8Cudp%E9%80%9A%E4%BF%A1%E9%AA%8C%E8%AF%81/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b8c5fe199b6ed7d82f8d796745cb75f1db5c0e80089bf3c900c156f7941e8838.css" integrity="sha256-uMX&#43;GZtu19gvjXlnRct18dtcDoAIm/PJAMFW95QeiDg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/%E8%87%AA%E5%AE%9A%E4%B9%89avd%E9%95%9C%E5%83%8F%E6%90%AD%E5%BB%BA%E5%92%8Cudp%E9%80%9A%E4%BF%A1%E9%AA%8C%E8%AF%81/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="The MaxJ Stack (Alt + H)">The MaxJ Stack</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      自定义AVD镜像搭建和AVD与主机UDP通信
+    </h1>
+    <div class="post-meta"><span title='2025-10-01 00:00:00 +0800 CST'>October 1, 2025</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;MaxJ-L
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%89%8d%e7%bd%ae%e6%9d%a1%e4%bb%b6" aria-label="前置条件">前置条件</a></li>
+                <li>
+                    <a href="#avd%e5%88%9b%e5%bb%ba" aria-label="AVD创建">AVD创建</a></li>
+                <li>
+                    <a href="#%e7%bc%96%e8%af%91%e8%87%aa%e5%ae%9a%e4%b9%89%e9%95%9c%e5%83%8f" aria-label="编译自定义镜像">编译自定义镜像</a></li>
+                <li>
+                    <a href="#%e4%bd%bf%e7%94%a8%e8%87%aa%e5%ae%9a%e4%b9%89%e7%9a%84%e9%95%9c%e5%83%8f" aria-label="使用自定义的镜像">使用自定义的镜像</a><ul>
+                        
+                <li>
+                    <a href="#%e9%97%ae%e9%a2%98" aria-label="问题">问题</a></li>
+                <li>
+                    <a href="#%e6%ad%a5%e9%aa%a4" aria-label="步骤">步骤</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e9%aa%8c%e8%af%81avd%e9%95%9c%e5%83%8f%e4%b8%8e%e6%9c%ac%e5%9c%b0windows%e7%9a%84udp%e9%80%9a%e4%bf%a1" aria-label="验证AVD镜像与本地Windows的UDP通信">验证AVD镜像与本地Windows的UDP通信</a><ul>
+                        
+                <li>
+                    <a href="#udp" aria-label="UDP">UDP</a><ul>
+                        
+                <li>
+                    <a href="#android--pcwindows" aria-label="Android &ndash;&gt; PC(Windows)">Android &ndash;&gt; PC(Windows)</a></li>
+                <li>
+                    <a href="#pcwindows--android" aria-label="PC(Windows) &ndash;&gt; Android">PC(Windows) &ndash;&gt; Android</a></li>
+                <li>
+                    <a href="#%e6%b5%8b%e8%af%95%e5%b7%a5%e5%85%b7" aria-label="测试工具">测试工具</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e9%99%84%e7%ac%94%e8%ae%b0" aria-label="附笔记：">附笔记：</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="前置条件">前置条件<a hidden class="anchor" aria-hidden="true" href="#前置条件">#</a></h1>
+<ol>
+<li>安装Android Studio；
+<ul>
+<li>参考1： <a href="https://developer.android.com/studio/install?hl=zh-cn">安装 Android Studio</a></li>
+<li><a href="https://blog.csdn.net/qq_38436214/article/details/105073213">Android Studio 安装配置教程- Windows(详细版)-CSDN博客</a></li>
+</ul>
+</li>
+<li>adb环境变量
+<ul>
+<li>安装好AS之后，一般就会有adb了，通常安装在 Android SDK 目录下的 platform-tools 子文件夹，找出这个命令，并设置环境变量；</li>
+</ul>
+</li>
+<li>Java环境
+<ul>
+<li>网络上一堆教程，自行设置；</li>
+</ul>
+</li>
+</ol>
+<h1 id="avd创建">AVD创建<a hidden class="anchor" aria-hidden="true" href="#avd创建">#</a></h1>
+<ol>
+<li>
+<p>打开AS，按顺序点击图标；
+![Pasted image 20250702102152](./Pasted image 20250702102152.png)</p>
+</li>
+<li>
+<p>选择设备定义，因为我们是做车载的，因此最好选一个平板设备，设备列表上有尺寸、分辨率和像素密度；
+![Pasted image 20250702102345](./Pasted image 20250702102345.png)</p>
+</li>
+<li>
+<p>选择镜像，我们现在是Android 14， 对应API 34， 选择API 34的镜像；</p>
+</li>
+</ol>
+<ul>
+<li>如果这里没有下载过API 34的镜像，会出现下图中其他API一样的下载图标，下载即可；
+![Pasted image 20250702102515](./Pasted image 20250702102515.png)</li>
+</ul>
+<ol start="4">
+<li>
+<p>设置设备名及相关参数，设备名自己改一下适合的，参数大致看一下，选择自己合适的即可；
+![Pasted image 20250702102601](./Pasted image 20250702102601.png)</p>
+</li>
+<li>
+<p>点击Finish之后，AVD便创建完成了，点击运行按钮，即可打开；
+![Pasted image 20250702102835](./Pasted image 20250702102835.png)</p>
+</li>
+</ol>
+<h1 id="编译自定义镜像">编译自定义镜像<a hidden class="anchor" aria-hidden="true" href="#编译自定义镜像">#</a></h1>
+<ol>
+<li>正常从AOSP获取代码即可，我这里编译的是Android 14的镜像，采用的是<strong>android14-release</strong>分支；</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">repo init --partial-clone -b android14-release -u <span class="o">[</span>https://android.googlesource.com/platform/manifest<span class="o">](</span>https://android.googlesource.com/platform/manifest<span class="o">)</span>
+</span></span><span class="line"><span class="cl">repo sync -c -j8
+</span></span></code></pre></div><ol start="2">
+<li>编译：
+<ul>
+<li>lunch 选项中， 选择SDK开头的COMBO， 这些COMBO才可以当作虚拟设备进行使用；</li>
+<li>后面的架构具体看使用镜像的设备的架构，如Windows使用，一般选择x86_64；</li>
+<li>其他的一些概念，md指multi display多屏，car\pc\phone等是指产品、portrait是默认竖屏模式等等；</li>
+</ul>
+</li>
+</ol>
+<pre tabindex="0"><code>source build/envsetup.sh
+lunch 
+73. sdk_car_arm-userdebug
+74. sdk_car_arm64-userdebug
+75. sdk_car_md_x86_64-userdebug
+76. sdk_car_portrait_x86_64-userdebug
+77. sdk_car_x86-userdebug
+78. sdk_car_x86_64-userdebug
+79. sdk_pc_x86_64-userdebug
+</code></pre><ol start="3">
+<li>编译完成后，用以下命令进行打包，会生成对应的镜像文件，这个就是我们需要的虚拟设备的镜像文件；</li>
+</ol>
+<pre tabindex="0"><code>make emu_img_zip // Android13及以上
+// 会生成sdk-repo-linux-system-images-eng.[username]].zip文件
+
+make -j32 sdk sdk_repo // Android13以下
+// 会在out/host/linux-x86/sdk/sdk_phone_x86生成
+// sdk-repo-linux-system-images-eng.[username].zip
+// repo-sys-img.xml
+</code></pre><ol start="3">
+<li>直接在AOSP环境使用，直接运行</li>
+</ol>
+<ul>
+<li>如果重新进入环境，需要提前source build/envsetup.sh和lunch &lt;之前对应的COMBO&gt;</li>
+</ul>
+<pre tabindex="0"><code>emulator
+// 如果要使用root remount获取权限
+emulator -writable-system
+</code></pre><h1 id="使用自定义的镜像">使用自定义的镜像<a hidden class="anchor" aria-hidden="true" href="#使用自定义的镜像">#</a></h1>
+<h2 id="问题">问题<a hidden class="anchor" aria-hidden="true" href="#问题">#</a></h2>
+<p>从Android Studio运行的镜像，会有以下几个问题：</p>
+<ol>
+<li>比自行打开emulator会稍微卡顿一些；</li>
+<li>AS默认没有加emulator -writable-system选项，没办法获得system用户权限；</li>
+<li>AS里面都是一些预置的镜像，没有入口运行自己编译的镜像；</li>
+</ol>
+<h2 id="步骤">步骤<a hidden class="anchor" aria-hidden="true" href="#步骤">#</a></h2>
+<blockquote>
+<p>这里是基于Android 14的镜像进行替换，上文提到Android13以下的编译方式有所不同，不知道此方案是否一样可行</p></blockquote>
+<ol>
+<li>
+<p>上述我们已经拿到了所需要的自定义的镜像文件，那么就可以使用镜像文件，替代Android Studio的镜像来运行了；</p>
+</li>
+<li>
+<p>解压自定义镜像
+解压sdk-repo-linux-system-images-eng.[username]].zip，结构树如下</p>
+</li>
+</ol>
+<pre tabindex="0"><code>sdk-repo-linux-system-images-eng
+└─x86_64
+    └─data
+        ├─media
+        │  └─0
+        │      └─test
+        │          └─CtsMediaTestCases-1.4
+        └─misc
+            ├─apns
+            ├─emulator
+            │  └─config
+            ├─gceconfigs
+            └─modem_simulator
+                └─etc
+                    └─modem_simulator
+                        └─files
+</code></pre><ol start="3">
+<li>
+<p>替换镜像
+这里假设之前已经创建好了一个AVD，需要将sdk-repo-linux-system-images-eng中的x86_64，替换原本下载的API 34的镜像；
+3.1 找出android sdk的位置，我这里位置是<code>C:\Users\&lt;user&gt;\AppData\Local\Android\Sdk\</code>
+3.2 将SDK文件夹下<strong>system-images\android-34\google_apis\x86_64</strong>删除，然后替换成sdk-repo-linux-system-images-eng中的x86_64；
+3.3 将SDK下的emulator文件夹，设置为环境变量；</p>
+</li>
+<li>
+<p>使用以下命令打开虚拟设备：</p>
+</li>
+</ol>
+<pre tabindex="0"><code>// 如果emulator是环境变量，直接使用emulator命令即可；
+C:\Users\&lt;user&gt;\AppData\Local\Android\Sdk\emulator\emulator.exe -avd &lt;之前创建的AVD设备名&gt; -sysdir C:\Users\&lt;user&gt;\AppData\Local\Android\Sdk\system-images\android-34\google_apis\x86_64 -writable-system
+
+说明：
+emulator命令
+-avd &lt;之前的虚拟设备名&gt;
+-sysdir &lt;替换后的x86_64文件夹地址&gt;
+-writable-system 允许用户进行root、remount，以便修改设备
+</code></pre><ol start="5">
+<li>BINGO</li>
+</ol>
+<h1 id="验证avd镜像与本地windows的udp通信">验证AVD镜像与本地Windows的UDP通信<a hidden class="anchor" aria-hidden="true" href="#验证avd镜像与本地windows的udp通信">#</a></h1>
+<p>参考：</p>
+<ul>
+<li><a href="https://developer.android.com/studio/run/emulator-networking?hl=zh-cn">设置 Android 模拟器网络 | Android Studio</a></li>
+</ul>
+<h2 id="udp">UDP<a hidden class="anchor" aria-hidden="true" href="#udp">#</a></h2>
+<h3 id="android--pcwindows">Android &ndash;&gt; PC(Windows)<a hidden class="anchor" aria-hidden="true" href="#android--pcwindows">#</a></h3>
+<ol>
+<li>测试程序-发送端</li>
+</ol>
+<blockquote>
+<p>对外必须发到10.0.2.2，具体参考官网文章。10.0.2.2是对于AVD的PC的本地环回IP</p></blockquote>
+<ol start="2">
+<li>PC端 UDP 监听对应端口即可；</li>
+</ol>
+<h3 id="pcwindows--android">PC(Windows) &ndash;&gt; Android<a hidden class="anchor" aria-hidden="true" href="#pcwindows--android">#</a></h3>
+<ol>
+<li>
+<p>从PC端命令行是无法直接看到AVD的IP、端口等信息的，需要按照参考文章，进行端口映射；</p>
+</li>
+<li>
+<p>端口映射
+2.1 访问控制台</p>
+</li>
+</ol>
+<pre tabindex="0"><code>adb devices
+List of devices attached
+emulator-5554   device  // 这里的5554，就是AVD模拟器实例的控制台的端口；
+
+
+telnet localhost 5554  // 通过 telnet 命令访问控制台
+</code></pre><p>2.2 进入控制台后，第一步是需要先认证，否则能看到的命令就只有如下几个，没有redir命令</p>
+<pre tabindex="0"><code>Android Console: Authentication required
+Android Console: type &#39;auth &lt;auth_token&gt;&#39; to authenticate
+Android Console: you can find your &lt;auth_token&gt; in
+&#39;C:\Users\&lt;user&gt;\.emulator_console_auth_token&#39;
+OK
+
+help
+Android console commands:
+help|h|?
+help-verbose
+ping
+avd
+auth
+quit|exit
+Try &#39;help-verbose&#39; for more description
+Try &#39;help &lt;command&gt;&#39; for command-specific help
+OK 
+</code></pre><p>2.3 控制台认证，认证的方式就是如提示所示，查看<code>C:\Users\&lt;user&gt;\.emulator_console_auth_token</code>文件的token，然后用auth命令进行认证；
+认证之后，才可以进行更高权限的操作</p>
+<pre tabindex="0"><code>auth FQn7ZW+ePZmQZ4hJ
+Android Console: type &#39;help&#39; for a list of commands
+OK    
+</code></pre><p>2.4 端口映射
+redir add &lt;协议类型&gt; PC端口：AVD端口</p>
+<pre tabindex="0"><code>redir add tcp:5000:6000   // 这个的意思是将PC端的5000端口，映射到AVD的6000端口，仅限TCP协议
+redir add udp:5000:6000   // 这个的意思是将PC端的5000端口，映射到AVD的6000端口，仅限UDP协议
+</code></pre><ol start="3">
+<li>接下来PC只需要发到本地的对应的PC端口，然后AVD中apk监听映射后的端口即可</li>
+</ol>
+<h3 id="测试工具">测试工具<a hidden class="anchor" aria-hidden="true" href="#测试工具">#</a></h3>
+<ol>
+<li>
+<p>测试工具是一个桌面端工具和一个APK</p>
+</li>
+<li>
+<p>测试工具：https://github.com/uname/PySockDebuger/releases/tag/1.0Beta
+可以用于桌面端模拟UDP发送和接收
+![Pasted image 20250702161614](./Pasted image 20250702161614.png)</p>
+</li>
+<li>
+<p>APK
+3.1 安装</p>
+</li>
+</ol>
+<pre tabindex="0"><code>adb install -t &lt;apk路径&gt;
+// 出现Success字样即说明安装成功
+</code></pre><p>3.2 通过AVD点击图标打开
+默认接收端口为12346，不可更改（验证接收前，请按照[[自定义AVD镜像搭建和UDP通信验证#PC(Windows) &ndash;&gt; Android]]进行端口转发）
+可以自行输入发送端口和消息进行发送，发送IP必须是10.0.2.2
+![Pasted image 20250702161632](./Pasted image 20250702161632.png)</p>
+<h2 id="附笔记">附笔记：<a hidden class="anchor" aria-hidden="true" href="#附笔记">#</a></h2>
+<ol>
+<li>测试程序-发送端</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="k">new</span><span class="w"> </span><span class="n">Thread</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">UdpSendRunnable</span><span class="p">()).</span><span class="na">start</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">private</span><span class="w"> </span><span class="kd">class</span> <span class="nc">UdpSendRunnable</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Runnable</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nd">@Override</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">run</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">DatagramSocket</span><span class="w"> </span><span class="n">socket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DatagramSocket</span><span class="p">())</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;Hello&#34;</span><span class="p">.</span><span class="na">getBytes</span><span class="p">();</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="s">&#34;MAXZ&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;run: Hello&#34;</span><span class="p">);</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="n">DatagramPacket</span><span class="w"> </span><span class="n">packet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DatagramPacket</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="na">length</span><span class="p">,</span><span class="w"> </span><span class="n">InetAddress</span><span class="p">.</span><span class="na">getByName</span><span class="p">(</span><span class="s">&#34;10.0.2.2&#34;</span><span class="p">),</span><span class="w"> </span><span class="n">12346</span><span class="p">);</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="n">socket</span><span class="p">.</span><span class="na">send</span><span class="p">(</span><span class="n">packet</span><span class="p">);</span><span class="w"> </span><span class="c1">// 直接发送  </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="n">sleep</span><span class="p">(</span><span class="n">1000</span><span class="p">);</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">InterruptedException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="s">&#34;MAXZ&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;run: &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">e</span><span class="p">);</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="n">e</span><span class="p">);</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="p">}</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><ol start="2">
+<li>测试程序-接收端</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">DatagramSocket</span><span class="w"> </span><span class="n">socket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">socket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DatagramSocket</span><span class="p">(</span><span class="n">12346</span><span class="p">);</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">SocketException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="n">e</span><span class="p">);</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">buffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="o">[</span><span class="n">1024</span><span class="o">]</span><span class="p">;</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">DatagramPacket</span><span class="w"> </span><span class="n">packet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DatagramPacket</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">.</span><span class="na">length</span><span class="p">);</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">socket</span><span class="p">.</span><span class="na">receive</span><span class="p">(</span><span class="n">packet</span><span class="p">);</span><span class="w"> </span><span class="c1">// 阻塞等待数据  </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">packet</span><span class="p">.</span><span class="na">getData</span><span class="p">(),</span><span class="w"> </span><span class="n">0</span><span class="p">,</span><span class="w"> </span><span class="n">packet</span><span class="p">.</span><span class="na">getLength</span><span class="p">());</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">displayText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;Received: &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&#34;\nFrom: &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">packet</span><span class="p">.</span><span class="na">getAddress</span><span class="p">();</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">displayText</span><span class="p">);</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/aosp/">AOSP</a></li>
+      <li><a href="http://localhost:1313/tags/avd/">AVD</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-ninja-failed-with-signal-killed/">
+    <span class="title">Next »</span>
+    <br>
+    <span>编译报错 Ninja Failed With Signal Killed</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">The MaxJ Stack</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
