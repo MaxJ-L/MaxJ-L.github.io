@@ -19,20 +19,26 @@ summary= "使用自编译的AVD镜像，并验证与主机的UDP通信"
 
 # AVD创建
 1. 打开AS，按顺序点击图标；
-![Pasted image 20250702102152](./Pasted image 20250702102152.png)
+
+![Pasted%20image%2020250702102152](./Pasted%20image%2020250702102152.png)
+  
 
 2. 选择设备定义，因为我们是做车载的，因此最好选一个平板设备，设备列表上有尺寸、分辨率和像素密度；
-![Pasted image 20250702102345](./Pasted image 20250702102345.png)
+
+![Pasted%20image%2020250702102345](./Pasted%20image%2020250702102345.png)
 
 3. 选择镜像，我们现在是Android 14， 对应API 34， 选择API 34的镜像；
 + 如果这里没有下载过API 34的镜像，会出现下图中其他API一样的下载图标，下载即可；
-![Pasted image 20250702102515](./Pasted image 20250702102515.png)
+
+![Pasted%20image%2020250702102515](./Pasted%20image%2020250702102515.png)
 
 4. 设置设备名及相关参数，设备名自己改一下适合的，参数大致看一下，选择自己合适的即可；
-![Pasted image 20250702102601](./Pasted image 20250702102601.png)
+
+![Pasted%20image%2020250702102601](./Pasted%20image%2020250702102601.png)
 
 5. 点击Finish之后，AVD便创建完成了，点击运行按钮，即可打开；
-![Pasted image 20250702102835](./Pasted image 20250702102835.png)
+
+![Pasted%20image%2020250702102835](./Pasted%20image%2020250702102835.png)
 
 # 编译自定义镜像
 1. 正常从AOSP获取代码即可，我这里编译的是Android 14的镜像，采用的是**android14-release**分支；
@@ -199,7 +205,8 @@ redir add udp:5000:6000   // 这个的意思是将PC端的5000端口，映射到
 1. 测试工具是一个桌面端工具和一个APK
 2. 测试工具：https://github.com/uname/PySockDebuger/releases/tag/1.0Beta
 	可以用于桌面端模拟UDP发送和接收
-	![Pasted image 20250702161614](./Pasted image 20250702161614.png)
+
+![Pasted%20image%2020250702161614](./Pasted%20image%2020250702161614.png)
 	
 3. APK
 3.1 安装
@@ -211,7 +218,8 @@ adb install -t <apk路径>
 3.2 通过AVD点击图标打开
 默认接收端口为12346，不可更改（验证接收前，请按照[[自定义AVD镜像搭建和UDP通信验证#PC(Windows) --> Android]]进行端口转发）
 可以自行输入发送端口和消息进行发送，发送IP必须是10.0.2.2
-![Pasted image 20250702161632](./Pasted image 20250702161632.png)
+
+![Pasted%20image%2020250702161632](./Pasted%20image%2020250702161632.png)
 
 
 

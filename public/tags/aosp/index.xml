@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>AOSP on The MaxJ Stack</title>
-    <link>http://localhost:50159/tags/aosp/</link>
+    <link>http://localhost:50570/tags/aosp/</link>
     <description>Recent content in AOSP on The MaxJ Stack</description>
     <generator>Hugo -- 0.150.1</generator>
     <language>zh-CN</language>
     <lastBuildDate>Wed, 01 Oct 2025 00:00:00 +0800</lastBuildDate>
-    <atom:link href="http://localhost:50159/tags/aosp/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:50570/tags/aosp/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>自定义AVD镜像搭建和AVD与主机UDP通信</title>
-      <link>http://localhost:50159/posts/%E8%87%AA%E5%AE%9A%E4%B9%89avd%E9%95%9C%E5%83%8F%E6%90%AD%E5%BB%BA%E5%92%8Cavd%E4%B8%8E%E4%B8%BB%E6%9C%BAudp%E9%80%9A%E4%BF%A1/</link>
+      <link>http://localhost:50570/posts/%E8%87%AA%E5%AE%9A%E4%B9%89avd%E9%95%9C%E5%83%8F%E6%90%AD%E5%BB%BA%E5%92%8Cavd%E4%B8%8E%E4%B8%BB%E6%9C%BAudp%E9%80%9A%E4%BF%A1/</link>
       <pubDate>Wed, 01 Oct 2025 00:00:00 +0800</pubDate>
-      <guid>http://localhost:50159/posts/%E8%87%AA%E5%AE%9A%E4%B9%89avd%E9%95%9C%E5%83%8F%E6%90%AD%E5%BB%BA%E5%92%8Cavd%E4%B8%8E%E4%B8%BB%E6%9C%BAudp%E9%80%9A%E4%BF%A1/</guid>
+      <guid>http://localhost:50570/posts/%E8%87%AA%E5%AE%9A%E4%B9%89avd%E9%95%9C%E5%83%8F%E6%90%AD%E5%BB%BA%E5%92%8Cavd%E4%B8%8E%E4%B8%BB%E6%9C%BAudp%E9%80%9A%E4%BF%A1/</guid>
       <description>使用自编译的AVD镜像，并验证与主机的UDP通信</description>
     </item>
     <item>
       <title>编译报错 Ninja Failed With Signal Killed</title>
-      <link>http://localhost:50159/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-ninja-failed-with-signal-killed/</link>
+      <link>http://localhost:50570/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-ninja-failed-with-signal-killed/</link>
       <pubDate>Sun, 28 Sep 2025 22:28:30 +0800</pubDate>
-      <guid>http://localhost:50159/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-ninja-failed-with-signal-killed/</guid>
+      <guid>http://localhost:50570/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-ninja-failed-with-signal-killed/</guid>
       <description>AOSP编译错误：Ninja Failed With Signal Killed</description>
     </item>
     <item>
       <title>WLS2编译AOSP笔记</title>
-      <link>http://localhost:50159/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/</link>
+      <link>http://localhost:50570/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/</link>
       <pubDate>Sun, 28 Sep 2025 22:28:18 +0800</pubDate>
-      <guid>http://localhost:50159/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/</guid>
+      <guid>http://localhost:50570/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/</guid>
       <description>WSL2编译AOSP的笔记</description>
     </item>
   </channel>

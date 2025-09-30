@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>编译 on The MaxJ Stack</title>
-    <link>http://localhost:50159/tags/%E7%BC%96%E8%AF%91/</link>
+    <link>http://localhost:50570/tags/%E7%BC%96%E8%AF%91/</link>
     <description>Recent content in 编译 on The MaxJ Stack</description>
     <generator>Hugo -- 0.150.1</generator>
     <language>zh-CN</language>
     <lastBuildDate>Sun, 28 Sep 2025 22:28:30 +0800</lastBuildDate>
-    <atom:link href="http://localhost:50159/tags/%E7%BC%96%E8%AF%91/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:50570/tags/%E7%BC%96%E8%AF%91/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>编译报错 Ninja Failed With Signal Killed</title>
-      <link>http://localhost:50159/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-ninja-failed-with-signal-killed/</link>
+      <link>http://localhost:50570/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-ninja-failed-with-signal-killed/</link>
       <pubDate>Sun, 28 Sep 2025 22:28:30 +0800</pubDate>
-      <guid>http://localhost:50159/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-ninja-failed-with-signal-killed/</guid>
+      <guid>http://localhost:50570/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-ninja-failed-with-signal-killed/</guid>
       <description>AOSP编译错误：Ninja Failed With Signal Killed</description>
     </item>
     <item>
       <title>WLS2编译AOSP笔记</title>
-      <link>http://localhost:50159/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/</link>
+      <link>http://localhost:50570/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/</link>
       <pubDate>Sun, 28 Sep 2025 22:28:18 +0800</pubDate>
-      <guid>http://localhost:50159/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/</guid>
+      <guid>http://localhost:50570/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/</guid>
       <description>WSL2编译AOSP的笔记</description>
     </item>
   </channel>
