@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Launcher on The MaxJ Stack</title>
+    <link>http://localhost:1313/tags/launcher/</link>
+    <description>Recent content in Launcher on The MaxJ Stack</description>
+    <generator>Hugo -- 0.147.7</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 09 Oct 2025 01:30:01 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/launcher/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CarLauncher导入到AndroidStudio方法</title>
+      <link>http://localhost:1313/posts/carlauncher%E5%AF%BC%E5%85%A5%E5%88%B0androidstudio%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Thu, 09 Oct 2025 01:30:01 +0800</pubDate>
+      <guid>http://localhost:1313/posts/carlauncher%E5%AF%BC%E5%85%A5%E5%88%B0androidstudio%E6%96%B9%E6%B3%95/</guid>
+      <description>CarLauncher导入到AndroidStudio方法</description>
+    </item>
+  </channel>
+</rss>

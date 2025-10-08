@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>进程接口被频繁调用致CPU占用率过高排查流程 | The MaxJ Stack</title>
+<meta name="keywords" content="Android, CPU">
+<meta name="description" content="进程接口被频繁调用致CPU占用率过高排查流程">
+<meta name="author" content="MaxJ-L">
+<link rel="canonical" href="http://localhost:1313/posts/%E8%BF%9B%E7%A8%8B%E6%8E%A5%E5%8F%A3%E8%A2%AB%E9%A2%91%E7%B9%81%E8%B0%83%E7%94%A8%E8%87%B4cpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E6%8E%92%E6%9F%A5%E6%B5%81%E7%A8%8B/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.a5a528d13f8d3c68ee890d8e25b5ca6ed04936a57d0603a745e75a4ab6ce5944.css" integrity="sha256-paUo0T&#43;NPGjuiQ2OJbXKbtBJNqV9BgOnRedaSrbOWUQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/%E8%BF%9B%E7%A8%8B%E6%8E%A5%E5%8F%A3%E8%A2%AB%E9%A2%91%E7%B9%81%E8%B0%83%E7%94%A8%E8%87%B4cpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E6%8E%92%E6%9F%A5%E6%B5%81%E7%A8%8B/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="The MaxJ Stack (Alt + H)">The MaxJ Stack</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      进程接口被频繁调用致CPU占用率过高排查流程
+    </h1>
+    <div class="post-meta"><span title='2025-10-08 22:28:30 +0800 CST'>October 8, 2025</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;MaxJ-L
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e9%97%ae%e9%a2%98%e6%8f%8f%e8%bf%b0" aria-label="问题描述">问题描述</a></li>
+                <li>
+                    <a href="#%e6%8e%92%e6%9f%a5%e6%b5%81%e7%a8%8b" aria-label="排查流程">排查流程</a><ul>
+                        
+                <li>
+                    <a href="#%e6%9f%a5%e7%9c%8b%e8%bf%9b%e7%a8%8bcpu%e5%8d%a0%e7%94%a8%e7%8e%87" aria-label="查看进程CPU占用率">查看进程CPU占用率</a></li>
+                <li>
+                    <a href="#%e6%9f%a5%e7%9c%8b%e7%ba%bf%e7%a8%8bcpu%e5%8d%a0%e7%94%a8%e7%8e%87" aria-label="查看线程CPU占用率">查看线程CPU占用率</a></li>
+                <li>
+                    <a href="#%e6%9f%a5%e6%89%bebinder%e5%ae%a2%e6%88%b7%e7%ab%af" aria-label="查找Binder客户端">查找Binder客户端</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e9%aa%8c%e8%af%81%e6%b5%81%e7%a8%8b" aria-label="验证流程">验证流程</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h4 id="问题描述">问题描述<a hidden class="anchor" aria-hidden="true" href="#问题描述">#</a></h4>
+<p>top命令查看当前进程CPU过高</p>
+<p>进程名：android.hardware.automotive.vehicle@2.0-service</p>
+<p>版本：Android11</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">Tasks: <span class="m">372</span> total,   <span class="m">4</span> running, <span class="m">368</span> sleeping,   <span class="m">0</span> stopped,   <span class="m">0</span> zombie
+</span></span><span class="line"><span class="cl">  Mem:  8047016K total,  6529068K used,  1517948K free,   135968K buffers
+</span></span><span class="line"><span class="cl"> Swap:  4194300K total,         <span class="m">0</span> used,  4194300K free,  1814164K cached
+</span></span><span class="line"><span class="cl">800%cpu 297%user  40%nice 307%sys 136%idle   8%iow   9%irq   4%sirq   0%host
+</span></span><span class="line"><span class="cl">   PID USER         PR  NI VIRT  RES  SHR S<span class="o">[</span>%CPU<span class="o">]</span> %MEM     TIME+ ARGS                                                                                                                                                                                                 
+</span></span><span class="line"><span class="cl">  <span class="m">1175</span> system       <span class="m">18</span>  -2  17G 306M 173M S  <span class="m">100</span>   3.8  19:42.93 system_server
+</span></span><span class="line"><span class="cl"> <span class="m">19281</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S 49.1   0.1   5:46.15 android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl">   <span class="m">276</span> logd         <span class="m">30</span>  <span class="m">10</span>  12G 174M 2.7M S 35.4   2.2   7:19.32 logd
+</span></span></code></pre></div><h4 id="排查流程">排查流程<a hidden class="anchor" aria-hidden="true" href="#排查流程">#</a></h4>
+<h5 id="查看进程cpu占用率">查看进程CPU占用率<a hidden class="anchor" aria-hidden="true" href="#查看进程cpu占用率">#</a></h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">console:/ <span class="c1"># top -p 19281</span>
+</span></span><span class="line"><span class="cl">Tasks: <span class="m">1</span> total,   <span class="m">0</span> running,   <span class="m">1</span> sleeping,   <span class="m">0</span> stopped,   <span class="m">0</span> zombie
+</span></span><span class="line"><span class="cl">  Mem:  8047016K total,  7306672K used,   740344K free,   147348K buffers
+</span></span><span class="line"><span class="cl"> Swap:  4194300K total,         <span class="m">0</span> used,  4194300K free,  1821408K cached
+</span></span><span class="line"><span class="cl">800%cpu 290%user  57%nice 302%sys 124%idle  13%iow   9%irq   4%sirq   0%host
+</span></span><span class="line"><span class="cl">   PID USER         PR  NI VIRT  RES  SHR S<span class="o">[</span>%CPU<span class="o">]</span> %MEM     TIME+ ARGS                                    
+</span></span><span class="line"><span class="cl"> <span class="m">19281</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S 49.3   0.1  14:27.25 android.hardware.automotive.vehicle@2.0-service
+</span></span></code></pre></div><p>从top命令查看得知，CPU是8核的处理器， vehicle进程占用约50%， 按百分比计算约占用6%左右。</p>
+<h5 id="查看线程cpu占用率">查看线程CPU占用率<a hidden class="anchor" aria-hidden="true" href="#查看线程cpu占用率">#</a></h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">console:/ <span class="c1"># top -H -p 19281 </span>
+</span></span><span class="line"><span class="cl">Threads: <span class="m">18</span> total,   <span class="m">0</span> running,  <span class="m">18</span> sleeping,   <span class="m">0</span> stopped,   <span class="m">0</span> zombie
+</span></span><span class="line"><span class="cl">  Mem:  8047016K total,  7264500K used,   782516K free,   147696K buffers
+</span></span><span class="line"><span class="cl"> Swap:  4194300K total,         <span class="m">0</span> used,  4194300K free,  1821928K cached
+</span></span><span class="line"><span class="cl">800%cpu 370%user  89%nice 322%sys   7%idle   0%iow   7%irq   4%sirq   0%host
+</span></span><span class="line"><span class="cl">  TID USER         PR  NI VIRT  RES  SHR S<span class="o">[</span>%CPU<span class="o">]</span> %MEM     TIME+ THREAD          PROCESS                                                                                                                                                                               
+</span></span><span class="line"><span class="cl"><span class="m">19303</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S 22.2   0.1   3:46.03 HwBinder:19281_ android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19307</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S 18.5   0.1   3:48.29 HwBinder:19281_ android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">20072</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  7.4   0.1   3:47.50 HwBinder:19281_ android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">20058</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  7.4   0.1   3:46.76 HwBinder:19281_ android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19311</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1   0:00.02 Binder:19281_3  android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19304</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1   0:00.49 vehicle@2.0-ser android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19310</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1   0:00.00 Binder:19281_1  android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19298</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1   0:00.00 vehicle@2.0-ser android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19291</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1   0:00.10 vehicle@2.0-ser android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19301</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1   0:00.01 vehicle@2.0-ser android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19299</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1   0:00.07 vehicle@2.0-ser android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19294</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1   0:00.00 vehicle@2.0-ser android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19295</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1   0:05.85 vehicle@2.0-ser android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19296</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1   0:00.00 vehicle@2.0-ser android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19297</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1   0:00.00 vehicle@2.0-ser android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19290</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1   0:00.00 vehicle@2.0-ser android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19289</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1   0:00.00 vehicle@2.0-ser android.hardware.automotive.vehicle@2.0-service
+</span></span><span class="line"><span class="cl"><span class="m">19281</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1   0:00.62 Binder:19281_2  android.hardware.automotive.vehicle@2.0-service
+</span></span></code></pre></div><p>可以看到其中占用较高的是线程19303、19307、20072、20058， 该4个线程线程名均有HwBinder，是HwBinder相关的线程。Android进程中，Binder相关的线程，基本上可以认定跟跨进程通信有关。binder和vndbinder使用的是AIDL接口， hwbinder使用的是HIDL接口。 这里能基本确定是有其他进程频繁调用Vehicle服务的接口引起的。</p>
+<h5 id="查找binder客户端">查找Binder客户端<a hidden class="anchor" aria-hidden="true" href="#查找binder客户端">#</a></h5>
+<p>既然清楚是因为有其他进程频繁调用引起，那么下一步就是需要找出该调用的客户端了。在对外提供的接口上，加上binder pid和uid的打印。以此来查找对应的进程。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">IPCThreadState</span><span class="o">::</span><span class="n">self</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getCallingPid</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">uid</span> <span class="o">=</span> <span class="n">IPCThreadState</span><span class="o">::</span><span class="n">self</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getCallingUid</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ALOGI</span><span class="p">(</span><span class="s">&#34;%s  Prop: 0x%x, PID: %d, UID: %d &#34;</span><span class="p">,</span> <span class="n">__func__</span><span class="p">,</span> <span class="n">requestedPropValue</span><span class="p">.</span><span class="n">prop</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">uid</span><span class="p">);</span>
+</span></span></code></pre></div><p>修改、替换后打印logcat日志，得知调用的PID为19915， UID为0，多次调用中基本没有停顿。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">04-01 14:42:51.169 <span class="m">19281</span> <span class="m">19307</span> I DefaultVehicleHal_v2_0: get  Prop: 0x294034c2, PID: 19915, UID: <span class="m">0</span> 
+</span></span><span class="line"><span class="cl">04-01 14:42:51.169 <span class="m">19281</span> <span class="m">19307</span> I DefaultVehicleHal_v2_0: get  Prop: 0x11400409, PID: 19915, UID: <span class="m">0</span> 
+</span></span></code></pre></div><p>根据PID，查找对应的服务（这里用xxx替代）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">130<span class="p">|</span>console:/ <span class="c1"># ps -A | grep 19915</span>
+</span></span><span class="line"><span class="cl">root          <span class="m">19915</span>      <span class="m">1</span> <span class="m">12493068</span> <span class="m">27708</span> futex_wait_queue_me <span class="m">0</span> S xxx_service
+</span></span></code></pre></div><h4 id="验证流程">验证流程<a hidden class="anchor" aria-hidden="true" href="#验证流程">#</a></h4>
+<ol>
+<li>删除调用的服务，先把调用的进程改名备份</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">adb root
+</span></span><span class="line"><span class="cl">adb remount
+</span></span><span class="line"><span class="cl">adb shell <span class="s2">&#34;mv /system/bin/xxx_service /system/bin/xxx_service1&#34;</span>
+</span></span></code></pre></div><ol start="2">
+<li>kill掉调用进程</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">130<span class="p">|</span>console:/ <span class="c1"># ps -A | grep xxx_service</span>
+</span></span><span class="line"><span class="cl">root          <span class="m">19915</span>      <span class="m">1</span> <span class="m">12493068</span> <span class="m">27708</span> futex_wait_queue_me <span class="m">0</span> S xxx_service
+</span></span><span class="line"><span class="cl">130<span class="p">|</span>console:/ <span class="c1"># kill 19915</span>
+</span></span></code></pre></div><ol start="3">
+<li>查看进程CPU占用</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">console:/ <span class="c1"># top -p 19281</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Tasks: <span class="m">1</span> total,   <span class="m">0</span> running,   <span class="m">1</span> sleeping,   <span class="m">0</span> stopped,   <span class="m">0</span> zombie
+</span></span><span class="line"><span class="cl">  Mem:  8047016K total,  7683740K used,   363276K free,   150140K buffers
+</span></span><span class="line"><span class="cl"> Swap:  4194300K total,         <span class="m">0</span> used,  4194300K free,  1829356K cached
+</span></span><span class="line"><span class="cl">800%cpu 182%user  64%nice 257%sys 264%idle  21%iow   7%irq   4%sirq   0%host
+</span></span><span class="line"><span class="cl">   PID USER         PR  NI VIRT  RES  SHR S<span class="o">[</span>%CPU<span class="o">]</span> %MEM     TIME+ ARGS   
+</span></span><span class="line"><span class="cl"> <span class="m">19281</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1  23:23.91 android.hardwa+
+</span></span><span class="line"><span class="cl">Tasks: <span class="m">1</span> total,   <span class="m">0</span> running,   <span class="m">1</span> sleeping,   <span class="m">0</span> stopped,   <span class="m">0</span> zombie
+</span></span><span class="line"><span class="cl">  Mem:  8047016K total,  7682600K used,   364416K free,   150140K buffers
+</span></span><span class="line"><span class="cl"> Swap:  4194300K total,         <span class="m">0</span> used,  4194300K free,  1829356K cached
+</span></span><span class="line"><span class="cl">800%cpu 182%user  64%nice 257%sys 264%idle  21%iow   7%irq   4%sirq   0%host
+</span></span><span class="line"><span class="cl">   PID USER         PR  NI VIRT  RES  SHR S<span class="o">[</span>%CPU<span class="o">]</span> %MEM     TIME+ ARGS                                                                                                                                                                                                 
+</span></span><span class="line"><span class="cl"> <span class="m">19281</span> vehicle_net+ <span class="m">20</span>   <span class="m">0</span>  12G  10M 6.4M S  0.0   0.1  23:23.91 android.hardware.automotive.vehicle@2.0-service
+</span></span></code></pre></div><ol start="4">
+<li>至此可看到Vehicle进程CPU占用恢复正常， 通知xxx_service排查。</li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/android/">Android</a></li>
+      <li><a href="http://localhost:1313/tags/cpu/">CPU</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/repo-sync%E6%8A%A5%E9%94%99-failing-repos-try-re-running-with--j1---fail-fast-to-exit-at-the-first-error/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Repo sync报错 Failing Repos Try re-running with -j1 --fail-fast to exit at the first error</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/android-studio%E5%AF%BC%E5%85%A5aosp%E6%BA%90%E7%A0%81/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Android Studio导入AOSP源码</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">The MaxJ Stack</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

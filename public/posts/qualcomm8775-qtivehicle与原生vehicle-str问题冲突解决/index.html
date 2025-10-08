@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Qualcomm8775 QTIVehicle与原生Vehicle STR问题冲突解决 | The MaxJ Stack</title>
+<meta name="keywords" content="AOSP, Qualcomm">
+<meta name="description" content="Qualcomm8775 QTIVehicle与原生Vehicle STR问题冲突解决">
+<meta name="author" content="MaxJ-L">
+<link rel="canonical" href="http://localhost:1313/posts/qualcomm8775-qtivehicle%E4%B8%8E%E5%8E%9F%E7%94%9Fvehicle-str%E9%97%AE%E9%A2%98%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.a5a528d13f8d3c68ee890d8e25b5ca6ed04936a57d0603a745e75a4ab6ce5944.css" integrity="sha256-paUo0T&#43;NPGjuiQ2OJbXKbtBJNqV9BgOnRedaSrbOWUQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/qualcomm8775-qtivehicle%E4%B8%8E%E5%8E%9F%E7%94%9Fvehicle-str%E9%97%AE%E9%A2%98%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="The MaxJ Stack (Alt + H)">The MaxJ Stack</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Qualcomm8775 QTIVehicle与原生Vehicle STR问题冲突解决
+    </h1>
+    <div class="post-meta"><span title='2025-10-08 22:28:30 +0800 CST'>October 8, 2025</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;MaxJ-L
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#android%e9%80%82%e9%85%8d%e8%af%b4%e6%98%8e" aria-label="Android适配说明">Android适配说明</a><ul>
+                        
+                <li>
+                    <a href="#%e7%b3%bb%e7%bb%9f%e9%80%82%e9%85%8d" aria-label="系统适配">系统适配</a><ul>
+                        
+                <li>
+                    <a href="#qti-vehicle%e4%b8%8e-%e8%87%aa%e5%ae%9a%e4%b9%89-vehicle%e5%86%b2%e7%aa%81" aria-label="QTI Vehicle与 自定义 Vehicle冲突">QTI Vehicle与 自定义 Vehicle冲突</a><ul>
+                        
+                <li>
+                    <a href="#%e6%9c%8d%e5%8a%a1%e5%86%b2%e7%aa%81" aria-label="服务冲突">服务冲突</a></li></ul>
+                </li>
+                <li>
+                    <a href="#ap_power_state_req%e9%85%8d%e7%bd%ae%e4%b8%8e%e5%8f%82%e6%95%b0" aria-label="AP_POWER_STATE_REQ配置与参数">AP_POWER_STATE_REQ配置与参数</a><ul>
+                        
+                <li>
+                    <a href="#%e9%85%8d%e7%bd%ae%e4%bf%ae%e6%94%b9" aria-label="配置修改">配置修改</a></li>
+                <li>
+                    <a href="#%e4%bc%91%e7%9c%a0%e9%bb%98%e8%ae%a4%e5%80%bc%e4%b8%8a%e6%8a%a5" aria-label="休眠默认值上报">休眠默认值上报</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#apphal-str%e8%a7%84%e8%8c%83" aria-label="APP/HAL STR规范">APP/HAL STR规范</a><ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#%e8%b5%84%e6%ba%90%e9%87%8a%e6%94%be" aria-label="资源释放">资源释放</a></li>
+                <li>
+                    <a href="#%e7%8a%b6%e6%80%81%e8%ae%b0%e5%bf%86" aria-label="状态记忆">状态记忆</a></li>
+                <li>
+                    <a href="#android%e7%b3%bb%e7%bb%9f%e9%87%8d%e5%90%af" aria-label="Android系统重启">Android系统重启</a></li>
+                <li>
+                    <a href="#%e7%9b%91%e5%90%ac%e7%94%b5%e6%ba%90%e7%8a%b6%e6%80%81%e4%bb%a3%e7%a0%81" aria-label="监听电源状态代码">监听电源状态代码</a></li></ul>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#apphal-str%e8%a7%84%e8%8c%83-1" aria-label="APP/HAL STR规范">APP/HAL STR规范</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e8%b0%83%e8%af%95%e8%af%b4%e6%98%8e" aria-label="调试说明">调试说明</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="android适配说明">Android适配说明<a hidden class="anchor" aria-hidden="true" href="#android适配说明">#</a></h1>
+<h2 id="系统适配">系统适配<a hidden class="anchor" aria-hidden="true" href="#系统适配">#</a></h2>
+<h3 id="qti-vehicle与-自定义-vehicle冲突">QTI Vehicle与 自定义 Vehicle冲突<a hidden class="anchor" aria-hidden="true" href="#qti-vehicle与-自定义-vehicle冲突">#</a></h3>
+<h4 id="服务冲突">服务冲突<a hidden class="anchor" aria-hidden="true" href="#服务冲突">#</a></h4>
+<ul>
+<li>
+<p>Vehicle HAL 是安卓AAOS（Android Automitive OS）的最底层， 虽然AOSP官网默认不支持自行添加Property， 但是国内一贯的做法，都是新增自定义的Property，对应底层QNX、MCU协议或者CAN信号，以此传递APP-车身功能的通信的一环；</p>
+</li>
+<li>
+<p>按照文档中STR的时序图(STR Sequence Flowsheet)，VHAL需要监听按键输入 /dev/input/event0 power按键， 当power按键按下， 需要向上发送AP_POWER_STATE_REQ属性， SHUTDOWN_PREPARE状态；</p>
+</li>
+<li>
+<p>上述两点需求，导致了实现合并STR和自定义的Property，方案有多种：</p>
+<ul>
+<li>方案一：自定义VehicleHAL + 监听/dev/input/event0按键节点，收到节点后往上发送AP_POWER_STATE_REQ属性， SHUTDOWN_PREPARE状态；（现使用）</li>
+<li>方案二：两个VHAL共存，因为QTI VHAL占用了default注册，自定义的VHAL需要修改注册名，两者在CarService进行合并，实现过，但是破坏了安卓标准接口，也破坏了CarService原有的设计，代码修改较为生硬；</li>
+<li>方案三：QTI-VHAL也是依赖DefaultVehicleHal和VehicleHardware等AOSP原生模块，可以考虑在这些模块链路中间实现拦截，将自定义的Proeprty进行自定义处理，原生Property留给QTI处理，理论上能尽可能保留两者，但这个也是最近灵机一动想出来的，可行性待验证；</li>
+</ul>
+</li>
+<li>
+<p>补充：/dev/input/event0只是一个INPUT节点，使用power按键作为QNX通知Android进入STR的通信手段，实际上Android自行发起SUSPEND，或者QNX通过SOA等方式告诉Android需要进入STR，也能够达到同样效果。如果是这样的话，也无需考虑是否适配QTI VHAL的问题了。</p>
+</li>
+<li>
+<p>方案一修改点：</p>
+<ul>
+<li>VHAL中通过EPOLL监听/dev/input/event0节点，收到POWER按键之后，即开始向上发送发送AP_POWER_STATE_REQ属性， SHUTDOWN_PREPARE状态；</li>
+<li>因为涉及event，rc文件的group中添加input用户组，保证能够监听INPUT节点；</li>
+</ul>
+<pre tabindex="0"><code>service vendor.vehicle-hal-maxj /vendor/bin/hw/android.hardware.automotive.vehicle@V1-maxj-service
+class early_hal
+user vehicle_network
+group system inet input
+</code></pre></li>
+</ul>
+<h3 id="ap_power_state_req配置与参数">AP_POWER_STATE_REQ配置与参数<a hidden class="anchor" aria-hidden="true" href="#ap_power_state_req配置与参数">#</a></h3>
+<h4 id="配置修改">配置修改<a hidden class="anchor" aria-hidden="true" href="#配置修改">#</a></h4>
+<ul>
+<li>修改说明：如果需要开启STR，除了处理QTI VHAL和Maxj VHAL冲突以外，还需要设置AP_POWER_STATE_REQ的参数，将对应configArray的参数设置为255（或者7）；</li>
+<li>参数说明：
+VHAL配置中有个configArray，允许对每个ID进行一个组数值配置，在代码中进行自定义的判断处理；
+这里的值定义对应VehicleApPowerStateConfigFlag，代表3个配置，是否支持休眠（Suspend to RAM）、是否支持设置睡眠后定时启动、是否支持睡眠（Suspend to Disk）；
+在CarPowerMangerService中，通过PowerHalService进行判断；</li>
+</ul>
+<pre tabindex="0"><code>hardware/automotive/vehicle/aidl/impl/default_config/config/DefaultProperties.json
+{
+       &#34;property&#34;: &#34;VehicleProperty::AP_POWER_STATE_REQ&#34;,
+       &#34;configArray&#34;: [
+-        0
++        255
+       ],
+       &#34;access&#34;: &#34;VehiclePropertyAccess::READ&#34;,
+       &#34;changeMode&#34;: &#34;VehiclePropertyChangeMode::ON_CHANGE&#34;
+</code></pre><pre tabindex="0"><code>enum VehicleApPowerStateConfigFlag {
+    ENABLE_DEEP_SLEEP_FLAG = 0x1,
+    CONFIG_SUPPORT_TIMER_POWER_ON_FLAG = 0x2,
+    ENABLE_HIBERNATION_FLAG = 0x4,
+}
+</code></pre><h4 id="休眠默认值上报">休眠默认值上报<a hidden class="anchor" aria-hidden="true" href="#休眠默认值上报">#</a></h4>
+<ul>
+<li>修改说明：需要开启STR，还需要VHAL上报的参数正确，AP_POWER_STATE_REQ这个ID对应的Value是一个int32数组，第一个已确定为 VehicleApPowerStateReq::SHUTDOWN_PREPARE 状态；
+第二个需要填写VehicleApPowerStateShutdownParam::CAN_SLEEP，才可以表示休眠，最后进入休眠状态，填0表示不使用，默认为SHUTDOWN关机状态，其他状态相应参考VehicleApPowerStateShutdownParam定义；</li>
+</ul>
+<h2 id="apphal-str规范">APP/HAL STR规范<a hidden class="anchor" aria-hidden="true" href="#apphal-str规范">#</a></h2>
+<blockquote>
+<p>这部分按照开发经验撰写，本次调试过程中，Android均可休眠。可供后续参考。</p></blockquote>
+<h4 id="资源释放">资源释放<a hidden class="anchor" aria-hidden="true" href="#资源释放">#</a></h4>
+<p>根据过往经验，APP和HAL服务等如果使用到系统资源，在进入休眠时，尽量将资源进行释放，包括但不限于以下资源：</p>
+<ul>
+<li>停止数据传输接口，如SPI、I²C、UART等等；</li>
+<li>关闭摄像头；</li>
+<li>关闭视频会话；</li>
+<li>关闭音频会话；</li>
+<li>停止OpenGL渲染；</li>
+<li>关闭屏幕；</li>
+<li>关闭USB；</li>
+</ul>
+<h4 id="状态记忆">状态记忆<a hidden class="anchor" aria-hidden="true" href="#状态记忆">#</a></h4>
+<ul>
+<li>音乐/电台等需要记忆上次播放状态、进度、播放曲目、波段、内容等等；</li>
+</ul>
+<h4 id="android系统重启">Android系统重启<a hidden class="anchor" aria-hidden="true" href="#android系统重启">#</a></h4>
+<p>Android系统长时间运行，内存碎片会导致系统卡顿，需要定期自动重启，建议以下条件满足时，可以进行Android系统重启</p>
+<ul>
+<li>系统运行时长累计运行超过60小时或者休眠次数达20h；</li>
+<li>档位处于P档；</li>
+<li>车速为0；</li>
+<li>时间尽量选择凌晨时间；</li>
+<li>用车情况：重启前1小时未被唤醒；</li>
+</ul>
+<blockquote>
+<p>以上为Android重启的建议需求，建议安排合理需求，定时对整机进行冷启动重启；</p></blockquote>
+<h4 id="监听电源状态代码">监听电源状态代码<a hidden class="anchor" aria-hidden="true" href="#监听电源状态代码">#</a></h4>
+<ul>
+<li>Java示例代码</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">car</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Car</span><span class="p">.</span><span class="na">createCar</span><span class="p">(</span><span class="n">mContext</span><span class="p">);</span><span class="w">  </span><span class="c1">// 获取CAR</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">carManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">CarPowerManager</span><span class="p">)</span><span class="w"> </span><span class="n">car</span><span class="p">.</span><span class="na">getCarManager</span><span class="p">(</span><span class="n">Car</span><span class="p">.</span><span class="na">POWER_SERVICE</span><span class="p">);</span><span class="w">   </span><span class="c1">// 获取CarPowerManager</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">carManager</span><span class="p">.</span><span class="na">setListener</span><span class="p">(</span><span class="n">mContext</span><span class="p">.</span><span class="na">getMainExecutor</span><span class="p">(),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CarPowerManager</span><span class="p">.</span><span class="na">CarPowerStateListener</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// 监听CarPowerState</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onStateChanged</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nd">@CarPowerManager.CarPowerState</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;onStateChanged: &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">);</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// do somthing ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">});</span><span class="w">
+</span></span></span></code></pre></div><ul>
+<li>C++示例代码</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="c1">// 获取AIDL Vehicle
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 参考 packages/services/Car/cpp/vhal/client/src/AidlVhalClient.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1">// hardware/interfaces/automotive/vehicle/vts/src/VtsHalAutomotiveVehicle_TargetTest.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="err">参数是</span> <span class="n">AP_POWER_STATE_REQ</span> <span class="err">、</span> <span class="n">areaId为0</span> <span class="err">、</span> <span class="err">采样率为</span> <span class="mi">0</span> <span class="err">（</span><span class="n">OnChange类型</span><span class="err">，此参数无用）</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">VehicleCallback</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IVehicleCallback</span><span class="o">::</span><span class="n">BnVehicleCallback</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ndk</span><span class="o">::</span><span class="n">ScopedAStatus</span> <span class="n">onPropertyEvent</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">VehiclePropValue</span><span class="o">&gt;&amp;</span> <span class="n">values</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="nl">value</span> <span class="p">:</span> <span class="n">values</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="n">prop</span> <span class="o">==</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">VehicleProperty</span><span class="o">::</span><span class="n">AP_POWER_STATE_REQ</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">value</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">int32Values</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">LOG</span><span class="p">(</span><span class="n">INFO</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;AP_POWER_STATE_REQ changed: &#34;</span> 
+</span></span><span class="line"><span class="cl">                              <span class="o">&lt;&lt;</span> <span class="n">value</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">int32Values</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">                    <span class="c1">// 处理状态变化：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                    <span class="c1">// 0 = WAIT_FOR_VHAL
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                    <span class="c1">// 1 = DEEP_SLEEP_EXIT
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                    <span class="c1">// 2 = SHUTDOWN_PREPARE
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                    <span class="c1">// 3 = CANCEL_SHUTDOWN
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ndk</span><span class="o">::</span><span class="n">ScopedAStatus</span><span class="o">::</span><span class="n">ok</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">ndk</span><span class="o">::</span><span class="n">ScopedAStatus</span> <span class="n">onPropertySet</span><span class="p">(</span><span class="k">const</span> <span class="n">VehiclePropValue</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 属性设置事件（此处不需要处理）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">return</span> <span class="n">ndk</span><span class="o">::</span><span class="n">ScopedAStatus</span><span class="o">::</span><span class="n">ok</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">ndk</span><span class="o">::</span><span class="n">ScopedAStatus</span> <span class="n">onPropertySetError</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">VehiclePropError</span><span class="o">&gt;&amp;</span> <span class="n">errors</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="nl">error</span> <span class="p">:</span> <span class="n">errors</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">LOG</span><span class="p">(</span><span class="n">ERROR</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Property set error: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">error</span><span class="p">.</span><span class="n">propId</span> 
+</span></span><span class="line"><span class="cl">                       <span class="o">&lt;&lt;</span> <span class="s">&#34; in area &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">error</span><span class="p">.</span><span class="n">areaId</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ndk</span><span class="o">::</span><span class="n">ScopedAStatus</span><span class="o">::</span><span class="n">ok</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">IVehicle</span><span class="o">::</span><span class="n">descriptor</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#34;/default&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 获取IVehicle服务实例
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">IVehicle</span><span class="o">&gt;</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">IVehicle</span><span class="o">::</span><span class="n">fromBinder</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ndk</span><span class="o">::</span><span class="n">SpAIBinder</span><span class="p">(</span><span class="n">AServiceManager_getService</span><span class="p">(</span><span class="n">instance</span><span class="p">.</span><span class="n">c_str</span><span class="p">())));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">vehicle</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">LOG</span><span class="p">(</span><span class="n">ERROR</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Failed to get IVehicle service&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建我们的回调对象
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="n">callback</span> <span class="o">=</span> <span class="n">ndk</span><span class="o">::</span><span class="n">SharedRefBase</span><span class="o">::</span><span class="n">make</span><span class="o">&lt;</span><span class="n">VehicleCallback</span><span class="o">&gt;</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 设置订阅选项
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">SubscribeOptions</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">.</span><span class="n">propId</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">VehicleProperty</span><span class="o">::</span><span class="n">AP_POWER_STATE_REQ</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">	<span class="p">.</span><span class="n">areaIds</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">},</span>  <span class="c1">// 全局区域
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">.</span><span class="n">sampleRate</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">,</span>  <span class="c1">// 事件触发模式（非周期性）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 执行订阅
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">ndk</span><span class="o">::</span><span class="n">ScopedAStatus</span> <span class="n">status</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">-&gt;</span><span class="n">subscribe</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="p">{</span><span class="n">options</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">status</span><span class="p">.</span><span class="n">isOk</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">LOG</span><span class="p">(</span><span class="n">ERROR</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Subscribe failed: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">status</span><span class="p">.</span><span class="n">getMessage</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">LOG</span><span class="p">(</span><span class="n">INFO</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Successfully subscribed to AP_POWER_STATE_REQ&#34;</span><span class="p">;</span>
+</span></span></code></pre></div><h2 id="apphal-str规范-1">APP/HAL STR规范<a hidden class="anchor" aria-hidden="true" href="#apphal-str规范-1">#</a></h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">car</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Car</span><span class="p">.</span><span class="na">createCar</span><span class="p">(</span><span class="n">mContext</span><span class="p">);</span><span class="w">  </span><span class="c1">// 获取CAR</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">carManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">CarPowerManager</span><span class="p">)</span><span class="w"> </span><span class="n">car</span><span class="p">.</span><span class="na">getCarManager</span><span class="p">(</span><span class="n">Car</span><span class="p">.</span><span class="na">POWER_SERVICE</span><span class="p">);</span><span class="w">   </span><span class="c1">// 获取CarPowerManager</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">carManager</span><span class="p">.</span><span class="na">setListener</span><span class="p">(</span><span class="n">mContext</span><span class="p">.</span><span class="na">getMainExecutor</span><span class="p">(),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CarPowerManager</span><span class="p">.</span><span class="na">CarPowerStateListener</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// 监听CarPowerState</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onStateChanged</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nd">@CarPowerManager.CarPowerState</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;onStateChanged: &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">);</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// do somthing ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">});</span><span class="w">
+</span></span></span></code></pre></div><h1 id="调试说明">调试说明<a hidden class="anchor" aria-hidden="true" href="#调试说明">#</a></h1>
+<ul>
+<li>调试步骤按照《80-73603-1_REV_AA_Gen3_and_Gen4_STR_Debug_User_Guide》文档调试即可；</li>
+<li>步骤：</li>
+</ul>
+<pre tabindex="0"><code>1. 关闭蓝牙、WiFi、USB
+USB关闭命令为
+#echo none &gt; /sys/bus/platform/devices/a800000.ssusb/mode // pass through usb devices
+#echo none &gt; /sys/bus/platform/devices/a600000.ssusb/mode
+
+2. 从QNX侧模拟发送Power按键到安卓
+#echo power &gt;/dev/qvm/la/powerkey
+
+3. QNX侧查看QVM状态
+cat /dev/qvm/la/power_status // 实测发现，power_status不存在，无法判别，因此通过adb是否能够连上安卓来进行判别
+// 如果安卓完全关机，并非进入休眠，qvm/la文件夹不存在
+</code></pre>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/aosp/">AOSP</a></li>
+      <li><a href="http://localhost:1313/tags/qualcomm/">Qualcomm</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3---%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E5%AF%BC%E8%87%B4/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>CarLauncher无法显示壁纸问题解决 - 主题设置导致</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/repo-sync%E6%8A%A5%E9%94%99-failing-repos-try-re-running-with--j1---fail-fast-to-exit-at-the-first-error/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Repo sync报错 Failing Repos Try re-running with -j1 --fail-fast to exit at the first error</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">The MaxJ Stack</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>AOSP编译流程1（脚本篇） | The MaxJ Stack</title>
+<meta name="keywords" content="AOSP, 编译">
+<meta name="description" content="AOSP编译流程1（脚本篇）">
+<meta name="author" content="MaxJ-L">
+<link rel="canonical" href="http://localhost:1313/posts/aosp%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B1%E8%84%9A%E6%9C%AC%E7%AF%87/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.a5a528d13f8d3c68ee890d8e25b5ca6ed04936a57d0603a745e75a4ab6ce5944.css" integrity="sha256-paUo0T&#43;NPGjuiQ2OJbXKbtBJNqV9BgOnRedaSrbOWUQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/aosp%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B1%E8%84%9A%E6%9C%AC%E7%AF%87/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="The MaxJ Stack (Alt + H)">The MaxJ Stack</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      AOSP编译流程1（脚本篇）
+    </h1>
+    <div class="post-meta"><span title='2025-10-08 22:28:30 +0800 CST'>October 8, 2025</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;MaxJ-L
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%9f%ba%e6%9c%ac%e7%9f%a5%e8%af%86" aria-label="基本知识">基本知识</a></li>
+                <li>
+                    <a href="#%e8%84%9a%e6%9c%ac%e7%af%87" aria-label="脚本篇">脚本篇</a><ul>
+                        
+                <li>
+                    <a href="#source-envsetupsh" aria-label="source envsetup.sh">source envsetup.sh</a><ul>
+                        
+                <li>
+                    <a href="#%e6%ba%90%e7%a0%81%e8%a7%a3%e6%9e%90" aria-label="源码解析">源码解析</a><ul>
+                        
+                <li>
+                    <a href="#%e8%8e%b7%e5%8f%96top" aria-label="获取TOP">获取TOP</a></li>
+                <li>
+                    <a href="#%e5%af%bc%e5%85%a5shell_utilssh" aria-label="导入shell_utils.sh">导入shell_utils.sh</a></li>
+                <li>
+                    <a href="#validate_current_shell" aria-label="validate_current_shell">validate_current_shell</a></li>
+                <li>
+                    <a href="#set_global_paths" aria-label="set_global_paths">set_global_paths</a></li>
+                <li>
+                    <a href="#source_vendorsetup" aria-label="source_vendorsetup">source_vendorsetup</a></li>
+                <li>
+                    <a href="#addcompletions" aria-label="addcompletions">addcompletions</a></li>
+                <li>
+                    <a href="#%e5%85%b6%e4%bb%96%e5%91%bd%e4%bb%a4" aria-label="其他命令">其他命令</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e6%80%bb%e7%bb%93" aria-label="总结">总结</a></li>
+                <li>
+                    <a href="#%e9%99%84%e5%bd%95%e8%84%9a%e6%9c%ac%e7%9a%84%e5%91%bd%e4%bb%a4" aria-label="附录：脚本的命令">附录：脚本的命令</a></li></ul>
+                </li>
+                <li>
+                    <a href="#lunch%e5%91%bd%e4%bb%a4" aria-label="lunch命令">lunch命令</a></li>
+                <li>
+                    <a href="#%e6%80%bb%e7%bb%93-1" aria-label="总结">总结</a></li>
+                <li>
+                    <a href="#m%e5%91%bd%e4%bb%a4" aria-label="m命令">m命令</a><ul>
+                        
+                <li>
+                    <a href="#%e6%ba%90%e7%a0%81%e8%a7%a3%e6%9e%90-1" aria-label="源码解析">源码解析</a><ul>
+                        
+                <li>
+                    <a href="#m" aria-label="m">m</a></li>
+                <li>
+                    <a href="#_wrap_build" aria-label="_wrap_build">_wrap_build</a></li>
+                <li>
+                    <a href="#soong_uibash" aria-label="soong_ui.bash">soong_ui.bash</a></li>
+                <li>
+                    <a href="#buildsoongscriptsmicrofactorybash" aria-label="build/soong/scripts/microfactory.bash">build/soong/scripts/microfactory.bash</a></li>
+                <li>
+                    <a href="#buildblueprintmicrofactorymicrofactorybash" aria-label="build/blueprint/microfactory/microfactory.bash">build/blueprint/microfactory/microfactory.bash</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%91%bd%e4%bb%a4%e6%8e%a8%e6%bc%94" aria-label="命令推演">命令推演</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="基本知识">基本知识<a hidden class="anchor" aria-hidden="true" href="#基本知识">#</a></h1>
+<ul>
+<li>Android编译一般输入如下命令进行选择全编</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">source</span> build/envsetup.sh
+</span></span><span class="line"><span class="cl">lunch &lt;combo&gt;
+</span></span><span class="line"><span class="cl">m -j <span class="m">16</span>
+</span></span></code></pre></div><ul>
+<li>单编
+<code>mm</code>、<code>mma</code>、<code>mmm</code>、<code>mmma</code></li>
+</ul>
+<h1 id="脚本篇">脚本篇<a hidden class="anchor" aria-hidden="true" href="#脚本篇">#</a></h1>
+<h2 id="source-envsetupsh">source envsetup.sh<a hidden class="anchor" aria-hidden="true" href="#source-envsetupsh">#</a></h2>
+<h3 id="源码解析">源码解析<a hidden class="anchor" aria-hidden="true" href="#源码解析">#</a></h3>
+<p>编译的第一步是运行<code>source build/envsetup.sh</code>，逐步看下发生了什么。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># ...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">T</span><span class="o">=</span><span class="k">$(</span>_gettop_once<span class="k">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[</span> ! <span class="s2">&#34;</span><span class="nv">$T</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s2">&#34;Couldn&#39;t locate the top of the tree. Always source build/envsetup.sh from the root of the tree.&#34;</span> &gt;<span class="p">&amp;</span><span class="m">2</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span><span class="line"><span class="cl"><span class="nv">IMPORTING_ENVSETUP</span><span class="o">=</span><span class="nb">true</span> <span class="nb">source</span> <span class="nv">$T</span>/build/make/shell_utils.sh
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">validate_current_shell  
+</span></span><span class="line"><span class="cl">set_global_paths  
+</span></span><span class="line"><span class="cl">source_vendorsetup  
+</span></span><span class="line"><span class="cl">addcompletions
+</span></span></code></pre></div><h4 id="获取top">获取TOP<a hidden class="anchor" aria-hidden="true" href="#获取top">#</a></h4>
+<ol>
+<li>进入之后立马获取一次TOP，就是Android根目录；</li>
+<li>如果获取不到TOP，就输出提示，重定向到stderr；</li>
+</ol>
+<h4 id="导入shell_utilssh">导入shell_utils.sh<a hidden class="anchor" aria-hidden="true" href="#导入shell_utilssh">#</a></h4>
+<ol>
+<li>设置IMPORTING_ENVSETUP为true；</li>
+<li>导入shell_utils.sh；</li>
+</ol>
+<h4 id="validate_current_shell">validate_current_shell<a hidden class="anchor" aria-hidden="true" href="#validate_current_shell">#</a></h4>
+<ul>
+<li>检测当前shell是否为bash或者zsh，bash是linux的shell，zsh是macOS的shell；都不是，提示警告；可以近似认为：<strong>只有Linux（bash shell）或者macOS（zsh shell）才可以编译AOSP；</strong></li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="k">function</span> validate_current_shell<span class="o">()</span> <span class="o">{</span>  
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">current_sh</span><span class="o">=</span><span class="s2">&#34;</span><span class="k">$(</span>ps -o <span class="nb">command</span> -p <span class="nv">$$</span><span class="k">)</span><span class="s2">&#34;</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">case</span> <span class="s2">&#34;</span><span class="nv">$current_sh</span><span class="s2">&#34;</span> in  
+</span></span><span class="line"><span class="cl">        *bash*<span class="o">)</span>  
+</span></span><span class="line"><span class="cl">            <span class="k">function</span> check_type<span class="o">()</span> <span class="o">{</span> <span class="nb">type</span> -t <span class="s2">&#34;</span><span class="nv">$1</span><span class="s2">&#34;</span><span class="p">;</span> <span class="o">}</span>  
+</span></span><span class="line"><span class="cl">            <span class="p">;;</span>  
+</span></span><span class="line"><span class="cl">        *zsh*<span class="o">)</span>  
+</span></span><span class="line"><span class="cl">            <span class="k">function</span> check_type<span class="o">()</span> <span class="o">{</span> <span class="nb">type</span> <span class="s2">&#34;</span><span class="nv">$1</span><span class="s2">&#34;</span><span class="p">;</span> <span class="o">}</span>  
+</span></span><span class="line"><span class="cl">            enable_zsh_completion <span class="p">;;</span>  
+</span></span><span class="line"><span class="cl">        *<span class="o">)</span>  
+</span></span><span class="line"><span class="cl">            <span class="nb">echo</span> -e <span class="s2">&#34;WARNING: Only bash and zsh are supported.\nUse of other shell would lead to erroneous results.&#34;</span>  
+</span></span><span class="line"><span class="cl">            <span class="p">;;</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">esac</span><span class="o">}</span>
+</span></span></code></pre></div><h4 id="set_global_paths">set_global_paths<a hidden class="anchor" aria-hidden="true" href="#set_global_paths">#</a></h4>
+<ul>
+<li>设置环境变量，这些环境变量包括build/soong/bin、build/bazel/bin、development/scripts、prebuilts/devtools/tools等；</li>
+<li>如果prebuilts/android-emulator/<system>/ 存在，就设置环境变量；</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Add directories to PATH that are NOT dependent on the lunch target.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># For directories that are lunch-specific, add them in set_lunch_paths</span>
+</span></span><span class="line"><span class="cl"><span class="k">function</span> set_global_paths<span class="o">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">T</span><span class="o">=</span><span class="k">$(</span>gettop<span class="k">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> ! <span class="s2">&#34;</span><span class="nv">$T</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> <span class="s2">&#34;Couldn&#39;t locate the top of the tree.  Try setting TOP.&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">##################################################################</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#                                                                #</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#              Read me before you modify this code               #</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#                                                                #</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#   This function sets ANDROID_GLOBAL_BUILD_PATHS to what it is  #</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#   adding to PATH, and the next time it is run, it removes that #</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#   from PATH.  This is required so envsetup.sh can be sourced   #</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#   more than once and still have working paths.                 #</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#                                                                #</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">##################################################################</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Out with the old...</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&#34;</span><span class="nv">$ANDROID_GLOBAL_BUILD_PATHS</span><span class="s2">&#34;</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="p">/</span><span class="nv">$ANDROID_GLOBAL_BUILD_PATHS</span><span class="p">/</span><span class="si">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># And in with the new...</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">ANDROID_GLOBAL_BUILD_PATHS</span><span class="o">=</span><span class="nv">$T</span>/build/soong/bin
+</span></span><span class="line"><span class="cl">    <span class="nv">ANDROID_GLOBAL_BUILD_PATHS</span><span class="o">+=</span>:<span class="nv">$T</span>/build/bazel/bin
+</span></span><span class="line"><span class="cl">    <span class="nv">ANDROID_GLOBAL_BUILD_PATHS</span><span class="o">+=</span>:<span class="nv">$T</span>/development/scripts
+</span></span><span class="line"><span class="cl">    <span class="nv">ANDROID_GLOBAL_BUILD_PATHS</span><span class="o">+=</span>:<span class="nv">$T</span>/prebuilts/devtools/tools
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># add kernel specific binaries</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> <span class="k">$(</span>uname -s<span class="k">)</span> <span class="o">=</span> Linux <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">ANDROID_GLOBAL_BUILD_PATHS</span><span class="o">+=</span>:<span class="nv">$T</span>/prebuilts/misc/linux-x86/dtc
+</span></span><span class="line"><span class="cl">        <span class="nv">ANDROID_GLOBAL_BUILD_PATHS</span><span class="o">+=</span>:<span class="nv">$T</span>/prebuilts/misc/linux-x86/libufdt
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># If prebuilts/android-emulator/&lt;system&gt;/ exists, prepend it to our PATH</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># to ensure that the corresponding &#39;emulator&#39; binaries are used.</span>
+</span></span><span class="line"><span class="cl">    <span class="k">case</span> <span class="k">$(</span>uname -s<span class="k">)</span> in
+</span></span><span class="line"><span class="cl">        Darwin<span class="o">)</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">ANDROID_EMULATOR_PREBUILTS</span><span class="o">=</span><span class="nv">$T</span>/prebuilts/android-emulator/darwin-x86_64
+</span></span><span class="line"><span class="cl">            <span class="p">;;</span>
+</span></span><span class="line"><span class="cl">        Linux<span class="o">)</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">ANDROID_EMULATOR_PREBUILTS</span><span class="o">=</span><span class="nv">$T</span>/prebuilts/android-emulator/linux-x86_64
+</span></span><span class="line"><span class="cl">            <span class="p">;;</span>
+</span></span><span class="line"><span class="cl">        *<span class="o">)</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">ANDROID_EMULATOR_PREBUILTS</span><span class="o">=</span>
+</span></span><span class="line"><span class="cl">            <span class="p">;;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">esac</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&#34;</span><span class="nv">$ANDROID_EMULATOR_PREBUILTS</span><span class="s2">&#34;</span> -a -d <span class="s2">&#34;</span><span class="nv">$ANDROID_EMULATOR_PREBUILTS</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">ANDROID_GLOBAL_BUILD_PATHS</span><span class="o">+=</span>:<span class="nv">$ANDROID_EMULATOR_PREBUILTS</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">export</span> ANDROID_EMULATOR_PREBUILTS
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Finally, set PATH</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$ANDROID_GLOBAL_BUILD_PATHS</span>:<span class="nv">$PATH</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><h4 id="source_vendorsetup">source_vendorsetup<a hidden class="anchor" aria-hidden="true" href="#source_vendorsetup">#</a></h4>
+<ul>
+<li>如果发现1个allowed-vendorsetup_sh-files 文件存在，就加载 allowed-vendorsetup_sh-files 文件限定的 vendorsetup.sh 文件;</li>
+<li>如果发现多个allowed-vendorsetup_sh-files 文件存在，则会报错并停止加载；</li>
+<li>如果发现allowed-vendorsetup_sh-files 文件不存在， 加载指定目录下的 vendorsetup.sh 文件;</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Execute the contents of any vendorsetup.sh files we can find.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Unless we find an allowed-vendorsetup_sh-files file, in which case we&#39;ll only</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># load those.</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># This allows loading only approved vendorsetup.sh files</span>
+</span></span><span class="line"><span class="cl"><span class="k">function</span> source_vendorsetup<span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">unset</span> VENDOR_PYTHONPATH
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">T</span><span class="o">=</span><span class="s2">&#34;</span><span class="k">$(</span>gettop<span class="k">)</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">allowed</span><span class="o">=</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> f in <span class="k">$(</span><span class="nb">cd</span> <span class="s2">&#34;</span><span class="nv">$T</span><span class="s2">&#34;</span> <span class="o">&amp;&amp;</span> find -L device vendor product -maxdepth <span class="m">4</span> -name <span class="s1">&#39;allowed-vendorsetup_sh-files&#39;</span> 2&gt;/dev/null <span class="p">|</span> sort<span class="k">)</span><span class="p">;</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&#34;</span><span class="nv">$allowed</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">echo</span> <span class="s2">&#34;More than one &#39;allowed_vendorsetup_sh-files&#39; file found, not including any vendorsetup.sh files:&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">echo</span> <span class="s2">&#34;  </span><span class="nv">$allowed</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">echo</span> <span class="s2">&#34;  </span><span class="nv">$f</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span>
+</span></span><span class="line"><span class="cl">        <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">allowed</span><span class="o">=</span><span class="s2">&#34;</span><span class="nv">$T</span><span class="s2">/</span><span class="nv">$f</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">done</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nv">allowed_files</span><span class="o">=</span>
+</span></span><span class="line"><span class="cl">    <span class="o">[</span> -n <span class="s2">&#34;</span><span class="nv">$allowed</span><span class="s2">&#34;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nv">allowed_files</span><span class="o">=</span><span class="k">$(</span>cat <span class="s2">&#34;</span><span class="nv">$allowed</span><span class="s2">&#34;</span><span class="k">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> dir in device vendor product<span class="p">;</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> f in <span class="k">$(</span><span class="nb">cd</span> <span class="s2">&#34;</span><span class="nv">$T</span><span class="s2">&#34;</span> <span class="o">&amp;&amp;</span> <span class="nb">test</span> -d <span class="nv">$dir</span> <span class="o">&amp;&amp;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>            find -L <span class="nv">$dir</span> -maxdepth <span class="m">4</span> -name <span class="s1">&#39;vendorsetup.sh&#39;</span> 2&gt;/dev/null <span class="p">|</span> sort<span class="k">)</span><span class="p">;</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="o">[[</span> -z <span class="s2">&#34;</span><span class="nv">$allowed</span><span class="s2">&#34;</span> <span class="o">||</span> <span class="s2">&#34;</span><span class="nv">$allowed_files</span><span class="s2">&#34;</span> <span class="o">=</span>~ <span class="nv">$f</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">echo</span> <span class="s2">&#34;including </span><span class="nv">$f</span><span class="s2">&#34;</span><span class="p">;</span> . <span class="s2">&#34;</span><span class="nv">$T</span><span class="s2">/</span><span class="nv">$f</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">else</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">echo</span> <span class="s2">&#34;ignoring </span><span class="nv">$f</span><span class="s2">, not in </span><span class="nv">$allowed</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">        <span class="k">done</span>
+</span></span><span class="line"><span class="cl">    <span class="k">done</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    setup_cog_env_if_needed
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><h4 id="addcompletions">addcompletions<a hidden class="anchor" aria-hidden="true" href="#addcompletions">#</a></h4>
+<ul>
+<li>设置补全文件，用于做补全命令使用。（就是能不能tab出来）；</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="k">function</span> addcompletions<span class="o">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">f</span><span class="o">=</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Keep us from trying to run in something that&#39;s neither bash nor zsh.</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> -z <span class="s2">&#34;</span><span class="nv">$BASH_VERSION</span><span class="s2">&#34;</span> -a -z <span class="s2">&#34;</span><span class="nv">$ZSH_VERSION</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Keep us from trying to run in bash that&#39;s too old.</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&#34;</span><span class="nv">$BASH_VERSION</span><span class="s2">&#34;</span> -a <span class="si">${</span><span class="nv">BASH_VERSINFO</span><span class="p">[0]</span><span class="si">}</span> -lt <span class="m">3</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">completion_files</span><span class="o">=(</span>
+</span></span><span class="line"><span class="cl">      packages/modules/adb/adb.bash
+</span></span><span class="line"><span class="cl">      system/core/fastboot/fastboot.bash
+</span></span><span class="line"><span class="cl">      tools/asuite/asuite.sh
+</span></span><span class="line"><span class="cl">    <span class="o">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Completion can be disabled selectively to allow users to use non-standard completion.</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># e.g.</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># ENVSETUP_NO_COMPLETION=adb # -&gt; disable adb completion</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># ENVSETUP_NO_COMPLETION=adb:bit # -&gt; disable adb and bit completion</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">T</span><span class="o">=</span><span class="k">$(</span>gettop<span class="k">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> f in <span class="si">${</span><span class="nv">completion_files</span><span class="p">[*]</span><span class="si">}</span><span class="p">;</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">f</span><span class="o">=</span><span class="s2">&#34;</span><span class="nv">$T</span><span class="s2">/</span><span class="nv">$f</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">[</span> ! -f <span class="s2">&#34;</span><span class="nv">$f</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">          <span class="nb">echo</span> <span class="s2">&#34;Warning: completion file </span><span class="nv">$f</span><span class="s2"> not found&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">elif</span> should_add_completion <span class="s2">&#34;</span><span class="nv">$f</span><span class="s2">&#34;</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">            . <span class="nv">$f</span>
+</span></span><span class="line"><span class="cl">        <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">    <span class="k">done</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> -z <span class="s2">&#34;</span><span class="nv">$ZSH_VERSION</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Doesn&#39;t work in zsh.</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">complete</span> -o nospace -F _croot croot
+</span></span><span class="line"><span class="cl">        <span class="c1"># TODO(b/244559459): Support b autocompletion for zsh</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">complete</span> -F _bazel__complete -o nospace b
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">complete</span> -F _lunch lunch
+</span></span><span class="line"><span class="cl">    <span class="nb">complete</span> -F _lunch_completion lunch2
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nb">complete</span> -F _complete_android_module_names pathmod
+</span></span><span class="line"><span class="cl">    <span class="nb">complete</span> -F _complete_android_module_names gomod
+</span></span><span class="line"><span class="cl">    <span class="nb">complete</span> -F _complete_android_module_names outmod
+</span></span><span class="line"><span class="cl">    <span class="nb">complete</span> -F _complete_android_module_names installmod
+</span></span><span class="line"><span class="cl">    <span class="nb">complete</span> -F _complete_android_module_names m
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><h4 id="其他命令">其他命令<a hidden class="anchor" aria-hidden="true" href="#其他命令">#</a></h4>
+<p>其实 source 某个脚本后， 脚本内的函数是可以直接调用的；例如附录下的命令，有许多都是定义在 envsetup.sh 脚本中的；</p>
+<p>在Android14及以前，这些大部分命令都是在 envsetup.sh 脚本中， Android15开始，将这些命令挪到了build/soong/bin中；</p>
+<h3 id="总结">总结<a hidden class="anchor" aria-hidden="true" href="#总结">#</a></h3>
+<ul>
+<li>获取一次根目录；</li>
+<li>导入shell_utils.sh；</li>
+<li>校验shell -&gt;  设置<strong>全局环境变量</strong> -&gt; <strong>查找加载供应商vendorsetup.sh脚本</strong> -&gt; 完成命令补全操作；</li>
+<li>提供其他便捷命令；</li>
+<li>unset了一些命令，这些命令一开始写在envsetup.sh的脚本，后来都放在soong系统里面了，因此需要unset；</li>
+</ul>
+<h3 id="附录脚本的命令">附录：脚本的命令<a hidden class="anchor" aria-hidden="true" href="#附录脚本的命令">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>方法名</th>
+          <th>功能描述</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>_gettop_once</code></td>
+          <td>查找并返回项目的根目录路径。</td>
+      </tr>
+      <tr>
+          <td><code>hmm</code></td>
+          <td>显示帮助信息，列出所有可用的函数及其用途。</td>
+      </tr>
+      <tr>
+          <td><code>build_build_var_cache</code></td>
+          <td>缓存构建变量，以便快速获取构建系统中的变量值。</td>
+      </tr>
+      <tr>
+          <td><code>destroy_build_var_cache</code></td>
+          <td>清除构建变量缓存。</td>
+      </tr>
+      <tr>
+          <td><code>get_abs_build_var</code></td>
+          <td>获取构建变量的绝对路径值。</td>
+      </tr>
+      <tr>
+          <td><code>get_build_var</code></td>
+          <td>获取构建变量的精确值。</td>
+      </tr>
+      <tr>
+          <td><code>check_product</code></td>
+          <td>检查指定的产品是否可以构建。</td>
+      </tr>
+      <tr>
+          <td><code>check_variant</code></td>
+          <td>检查指定的变体是否有效。</td>
+      </tr>
+      <tr>
+          <td><code>set_lunch_paths</code></td>
+          <td>设置与<code>lunch</code>目标相关的环境路径。</td>
+      </tr>
+      <tr>
+          <td><code>set_global_paths</code></td>
+          <td>设置与全局环境相关的路径。</td>
+      </tr>
+      <tr>
+          <td><code>printconfig</code></td>
+          <td>打印当前构建配置信息。</td>
+      </tr>
+      <tr>
+          <td><code>set_stuff_for_environment</code></td>
+          <td>设置构建环境所需的基本变量和路径。</td>
+      </tr>
+      <tr>
+          <td><code>set_sequence_number</code></td>
+          <td>设置构建环境的序列号。</td>
+      </tr>
+      <tr>
+          <td><code>should_add_completion</code></td>
+          <td>检查是否应为某个命令添加补全功能。</td>
+      </tr>
+      <tr>
+          <td><code>addcompletions</code></td>
+          <td>添加命令补全功能（支持bash和zsh）。</td>
+      </tr>
+      <tr>
+          <td><code>multitree_lunch_help</code></td>
+          <td>显示<code>multitree_lunch</code>的帮助信息。</td>
+      </tr>
+      <tr>
+          <td><code>multitree_lunch</code></td>
+          <td>配置多树构建环境，设置产品和变体组合。</td>
+      </tr>
+      <tr>
+          <td><code>choosetype</code></td>
+          <td>选择构建类型（release或debug）。</td>
+      </tr>
+      <tr>
+          <td><code>chooseproduct</code></td>
+          <td>选择要构建的产品。</td>
+      </tr>
+      <tr>
+          <td><code>choosevariant</code></td>
+          <td>选择构建变体（如eng、userdebug等）。</td>
+      </tr>
+      <tr>
+          <td><code>choosecombo</code></td>
+          <td>综合选择构建类型、产品和变体。</td>
+      </tr>
+      <tr>
+          <td><code>add_lunch_combo</code></td>
+          <td>（已废弃）添加新的<code>lunch</code>组合选项。</td>
+      </tr>
+      <tr>
+          <td><code>print_lunch_menu</code></td>
+          <td>打印常见的<code>lunch</code>组合菜单。</td>
+      </tr>
+      <tr>
+          <td><code>lunch</code></td>
+          <td>配置构建环境，选择产品和变体组合。</td>
+      </tr>
+      <tr>
+          <td><code>tapas</code></td>
+          <td>配置构建环境以构建独立的应用程序（APK）。</td>
+      </tr>
+      <tr>
+          <td><code>banchan</code></td>
+          <td>配置构建环境以构建独立的模块（APEX）。</td>
+      </tr>
+      <tr>
+          <td><code>croot</code></td>
+          <td>切换到项目根目录或其子目录。</td>
+      </tr>
+      <tr>
+          <td><code>m</code></td>
+          <td>从项目根目录开始构建。</td>
+      </tr>
+      <tr>
+          <td><code>mm</code></td>
+          <td>构建当前目录下的模块及其依赖项。</td>
+      </tr>
+      <tr>
+          <td><code>mmm</code></td>
+          <td>构建指定目录下的模块及其依赖项。</td>
+      </tr>
+      <tr>
+          <td><code>mma</code></td>
+          <td>同<code>mm</code>，但会强制重新构建。</td>
+      </tr>
+      <tr>
+          <td><code>mmma</code></td>
+          <td>同<code>mmm</code>，但会强制重新构建。</td>
+      </tr>
+      <tr>
+          <td><code>provision</code></td>
+          <td>使用<code>fastboot</code>刷入设备所需的分区镜像。</td>
+      </tr>
+      <tr>
+          <td><code>cgrep</code></td>
+          <td>在本地C/C++文件中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>ggrep</code></td>
+          <td>在本地Gradle文件中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>gogrep</code></td>
+          <td>在本地Go文件中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>jgrep</code></td>
+          <td>在本地Java文件中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>jsongrep</code></td>
+          <td>在本地JSON文件中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>ktgrep</code></td>
+          <td>在本地Kotlin文件中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>resgrep</code></td>
+          <td>在本地资源文件（<code>.xml</code>）中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>mangrep</code></td>
+          <td>在本地<code>AndroidManifest.xml</code>文件中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>mgrep</code></td>
+          <td>在本地Makefile和<code>.bp</code>文件中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>owngrep</code></td>
+          <td>在本地<code>OWNERS</code>文件中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>rsgrep</code></td>
+          <td>在本地Rust文件中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>sepgrep</code></td>
+          <td>在本地sepolicy文件中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>sgrep</code></td>
+          <td>在本地源代码文件中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>tomlgrep</code></td>
+          <td>在本地Toml文件中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>pygrep</code></td>
+          <td>在本地Python文件中进行搜索。</td>
+      </tr>
+      <tr>
+          <td><code>godir</code></td>
+          <td>跳转到包含指定文件的目录。</td>
+      </tr>
+      <tr>
+          <td><code>allmod</code></td>
+          <td>列出所有模块。</td>
+      </tr>
+      <tr>
+          <td><code>gomod</code></td>
+          <td>跳转到指定模块所在的目录。</td>
+      </tr>
+      <tr>
+          <td><code>bmod</code></td>
+          <td>获取Soong模块的Bazel标签（如果已转换）。</td>
+      </tr>
+      <tr>
+          <td><code>pathmod</code></td>
+          <td>获取指定模块所在的目录。</td>
+      </tr>
+      <tr>
+          <td><code>outmod</code></td>
+          <td>获取指定模块安装输出的位置（带特定扩展名）。</td>
+      </tr>
+      <tr>
+          <td><code>dirmods</code></td>
+          <td>获取指定目录中定义的模块列表。</td>
+      </tr>
+      <tr>
+          <td><code>installmod</code></td>
+          <td>使用<code>adb</code>安装指定模块的APK。</td>
+      </tr>
+      <tr>
+          <td><code>refreshmod</code></td>
+          <td>刷新模块列表以供<code>allmod</code>、<code>gomod</code>、<code>pathmod</code>、<code>outmod</code>、<code>installmod</code>使用。</td>
+      </tr>
+      <tr>
+          <td><code>syswrite</code></td>
+          <td>将分区（如<code>system.img</code>）挂载为可写，并在必要时重启设备。</td>
+      </tr>
+      <tr>
+          <td>=======</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="lunch命令">lunch命令<a hidden class="anchor" aria-hidden="true" href="#lunch命令">#</a></h2>
+<p>源码解析</p>
+<ul>
+<li>lunch命令的源码还是在envsetup.sh脚本中</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="k">function</span> lunch<span class="o">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1"># 如果只有1个参数并且参数为--help，显示帮助</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[[</span> <span class="nv">$#</span> -eq <span class="m">1</span> <span class="o">&amp;&amp;</span> <span class="nv">$1</span> <span class="o">=</span> <span class="s2">&#34;--help&#34;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        _lunch_usage
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="m">0</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 没有参数或者参数大于3个，提示并返回</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[[</span> <span class="nv">$#</span> -eq <span class="m">0</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> <span class="s2">&#34;No target specified. See lunch --help&#34;</span> 1&gt;<span class="p">&amp;</span><span class="m">2</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[[</span> <span class="nv">$#</span> -gt <span class="m">3</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> <span class="s2">&#34;Too many parameters given. See lunch --help&#34;</span> 1&gt;<span class="p">&amp;</span><span class="m">2</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># 3个重要的变量</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> product release variant
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># 从参数中提取3个变量；</span>
+</span></span><span class="line"><span class="cl">	<span class="c1"># 旧格式处理方式，带-的选项就是旧格式，如果解析出来任一变量为空，就报错；</span>
+</span></span><span class="line"><span class="cl">	<span class="c1"># 如果不带-，就按照新格式处理；</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Handle the legacy format</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">legacy</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$1</span> <span class="p">|</span> grep <span class="s2">&#34;-&#34;</span><span class="k">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[[</span> <span class="nv">$#</span> -eq <span class="m">1</span> <span class="o">&amp;&amp;</span> -n <span class="nv">$legacy</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">IFS</span><span class="o">=</span><span class="s2">&#34;-&#34;</span> <span class="nb">read</span> -r product release variant <span class="o">&lt;&lt;&lt;</span> <span class="s2">&#34;</span><span class="nv">$1</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">[[</span> -z <span class="s2">&#34;</span><span class="nv">$product</span><span class="s2">&#34;</span> <span class="o">]]</span> <span class="o">||</span> <span class="o">[[</span> -z <span class="s2">&#34;</span><span class="nv">$release</span><span class="s2">&#34;</span> <span class="o">]]</span> <span class="o">||</span> <span class="o">[[</span> -z <span class="s2">&#34;</span><span class="nv">$variant</span><span class="s2">&#34;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">echo</span> <span class="s2">&#34;Invalid lunch combo: </span><span class="nv">$1</span><span class="s2">&#34;</span> 1&gt;<span class="p">&amp;</span><span class="m">2</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">echo</span> <span class="s2">&#34;Valid combos must be of the form &lt;product&gt;-&lt;release&gt;-&lt;variant&gt; when using&#34;</span> 1&gt;<span class="p">&amp;</span><span class="m">2</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">echo</span> <span class="s2">&#34;the legacy format.  Run &#39;lunch --help&#39; for usage.&#34;</span> 1&gt;<span class="p">&amp;</span><span class="m">2</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl">        <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1"># 新格式只要product， 其他两个默认为trunk_staging和eng</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Handle the new format.</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[[</span> -z <span class="nv">$legacy</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">product</span><span class="o">=</span><span class="nv">$1</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">release</span><span class="o">=</span><span class="nv">$2</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">[[</span> -z <span class="nv">$release</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">release</span><span class="o">=</span>trunk_staging
+</span></span><span class="line"><span class="cl">        <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">variant</span><span class="o">=</span><span class="nv">$3</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">[[</span> -z <span class="nv">$variant</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">variant</span><span class="o">=</span>eng
+</span></span><span class="line"><span class="cl">        <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># 下一步调用</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Validate the selection and set all the environment stuff</span>
+</span></span><span class="line"><span class="cl">    _lunch_meat <span class="nv">$product</span> <span class="nv">$release</span> <span class="nv">$variant</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><ol>
+<li>设置环境变量和调用build_build_var_cache，缓存编译要用到的变量；</li>
+<li>检查build_build_var_cache是否执行成功；</li>
+<li>从缓存里面导出TARGET_PRODUCT和TARGET_BUILD_VARIANT环境变量；</li>
+<li>export TARGET_RELEASE、 TARGET_BUILD_TYPE等环境变量；</li>
+<li>判断是否开启安静模式，安静模式就不输出；非安静模式下，如果还有spam_for_lunch脚本，就把这个脚本也加载；</li>
+<li>set_stuff_for_environment，里面是设置了其他一些环境变量；</li>
+<li>检查多用户配置；</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="k">function</span> _lunch_meat<span class="o">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">product</span><span class="o">=</span><span class="nv">$1</span>  <span class="c1"># 定义局部变量 product，赋值为第一个参数</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">release</span><span class="o">=</span><span class="nv">$2</span>  <span class="c1"># 定义局部变量 release，赋值为第二个参数</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">variant</span><span class="o">=</span><span class="nv">$3</span>  <span class="c1"># 定义局部变量 variant，赋值为第三个参数</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 设置环境变量并调用 build_build_var_cache 函数缓存构建变量</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">TARGET_PRODUCT</span><span class="o">=</span><span class="nv">$product</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    <span class="nv">TARGET_RELEASE</span><span class="o">=</span><span class="nv">$release</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    <span class="nv">TARGET_BUILD_VARIANT</span><span class="o">=</span><span class="nv">$variant</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    build_build_var_cache
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 检查 build_build_var_cache 的执行结果是否成功</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -ne <span class="m">0</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 如果 product 包含 &#34;_eng&#34;、&#34;_user&#34; 或 &#34;_userdebug&#34;，提示用户可能是下划线使用错误</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">[[</span> <span class="s2">&#34;</span><span class="nv">$product</span><span class="s2">&#34;</span> <span class="o">=</span>~ .*_<span class="o">(</span>eng<span class="p">|</span>user<span class="p">|</span>userdebug<span class="o">)</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">echo</span> <span class="s2">&#34;Did you mean -</span><span class="si">${</span><span class="nv">product</span><span class="p">/*_/</span><span class="si">}</span><span class="s2">? (dash instead of underscore)&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="m">1</span>  <span class="c1"># 返回错误码 1 表示失败</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 从缓存中获取并导出最终的 TARGET_PRODUCT 和 TARGET_BUILD_VARIANT 环境变量</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">export</span> <span class="nv">TARGET_PRODUCT</span><span class="o">=</span><span class="k">$(</span>_get_build_var_cached TARGET_PRODUCT<span class="k">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">export</span> <span class="nv">TARGET_BUILD_VARIANT</span><span class="o">=</span><span class="k">$(</span>_get_build_var_cached TARGET_BUILD_VARIANT<span class="k">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 导出其他必要的环境变量</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">export</span> <span class="nv">TARGET_RELEASE</span><span class="o">=</span><span class="nv">$release</span>  <span class="c1"># 导出 TARGET_RELEASE 变量</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 注意：这里的 &#34;release&#34; 是一个固定的字符串，而不是变量的值</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">export</span> <span class="nv">TARGET_BUILD_TYPE</span><span class="o">=</span>release  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 如果未设置 ANDROID_QUIET_BUILD（安静模式），则打印空行</span>
+</span></span><span class="line"><span class="cl">    <span class="o">[[</span> -n <span class="s2">&#34;</span><span class="si">${</span><span class="nv">ANDROID_QUIET_BUILD</span><span class="k">:-</span><span class="si">}</span><span class="s2">&#34;</span> <span class="o">]]</span> <span class="o">||</span> <span class="nb">echo</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 调用 set_stuff_for_environment 设置构建环境</span>
+</span></span><span class="line"><span class="cl">    set_stuff_for_environment
+</span></span><span class="line"><span class="cl">    <span class="c1"># 如果未启用安静模式，则打印当前配置信息</span>
+</span></span><span class="line"><span class="cl">    <span class="o">[[</span> -n <span class="s2">&#34;</span><span class="si">${</span><span class="nv">ANDROID_QUIET_BUILD</span><span class="k">:-</span><span class="si">}</span><span class="s2">&#34;</span> <span class="o">]]</span> <span class="o">||</span> printconfig
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 如果未启用安静模式，并且存在 spam_for_lunch 脚本，则运行该脚本提供额外提示</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[[</span> -z <span class="s2">&#34;</span><span class="si">${</span><span class="nv">ANDROID_QUIET_BUILD</span><span class="si">}</span><span class="s2">&#34;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">local</span> <span class="nv">spam_for_lunch</span><span class="o">=</span><span class="k">$(</span>gettop<span class="k">)</span>/build/make/tools/envsetup/spam_for_lunch
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">[[</span> -x <span class="nv">$spam_for_lunch</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$spam_for_lunch</span>
+</span></span><span class="line"><span class="cl">        <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 清理构建变量缓存</span>
+</span></span><span class="line"><span class="cl">    destroy_build_var_cache
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 如果设置了 CHECK_MU_CONFIG，则检查多用户配置</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[[</span> -n <span class="s2">&#34;</span><span class="si">${</span><span class="nv">CHECK_MU_CONFIG</span><span class="k">:-</span><span class="si">}</span><span class="s2">&#34;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">      check_mu_config
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><h2 id="总结-1">总结<a hidden class="anchor" aria-hidden="true" href="#总结-1">#</a></h2>
+<ul>
+<li>加载了一堆环境变量；</li>
+</ul>
+<h2 id="m命令">m命令<a hidden class="anchor" aria-hidden="true" href="#m命令">#</a></h2>
+<h3 id="源码解析-1">源码解析<a hidden class="anchor" aria-hidden="true" href="#源码解析-1">#</a></h3>
+<ul>
+<li>一般我们敲命令的时候是敲m -j 32，然后在这里会编程，执行命令的时候，一般在android根目录下面以rootpath替代</li>
+</ul>
+<h4 id="m">m<a hidden class="anchor" aria-hidden="true" href="#m">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 引入 shell_utils.sh 脚本，该脚本通常包含一些辅助函数。</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># $(dirname $BASH_SOURCE) 获取当前脚本所在的目录，然后通过 cd 和 pwd 找到其绝对路径，</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 最终定位到 ../../make/shell_utils.sh 文件并加载它。</span>
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> <span class="k">$(</span><span class="nb">cd</span> <span class="k">$(</span>dirname <span class="nv">$BASH_SOURCE</span><span class="k">)</span> <span class="p">&amp;</span>&gt; /dev/null <span class="o">&amp;&amp;</span> <span class="nb">pwd</span><span class="k">)</span>/../../make/shell_utils.sh
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 调用 require_top 函数，确保环境变量 $TOP 已正确设置为项目的顶级目录。</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 如果 $TOP 未设置或无效，require_top 可能会报错并退出脚本。</span>
+</span></span><span class="line"><span class="cl">require_top
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 调用 _wrap_build 函数，执行 Soong 构建系统的核心逻辑。</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 参数说明：</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># &#34;$TOP/build/soong/soong_ui.bash&#34;：指定要运行的构建脚本（Soong 的入口脚本）。</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --build-mode：以build模式运行 Soong。</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --all-modules：编译所有模块。</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --dir=&#34;$(pwd)&#34;：指定当前工作目录作为build的上下文。</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># &#34;$@&#34;：将脚本接收到的所有参数传递给 soong_ui.bash。</span>
+</span></span><span class="line"><span class="cl">_wrap_build <span class="s2">&#34;</span><span class="nv">$TOP</span><span class="s2">/build/soong/soong_ui.bash&#34;</span> --build-mode --all-modules --dir<span class="o">=</span><span class="s2">&#34;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">&#34;</span> <span class="s2">&#34;</span><span class="nv">$@</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 返回上一步命令的退出状态码，决定脚本是否成功执行。</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 如果构建成功，返回 0；否则返回非零值表示失败。</span>
+</span></span><span class="line"><span class="cl"><span class="nb">exit</span> <span class="nv">$?</span>
+</span></span></code></pre></div><h4 id="_wrap_build">_wrap_build<a hidden class="anchor" aria-hidden="true" href="#_wrap_build">#</a></h4>
+<ul>
+<li>如果是安静模式，就直接运行了；</li>
+<li>如果不是安静模式，会先后打印一些信息；</li>
+<li>这里其实没有实际编译作用，但是是个可以借鉴的脚本写法；</li>
+<li>去掉这些杂七杂八的，命令是**&quot;$TOP/build/soong/soong_ui.bash&quot; &ndash;build-mode &ndash;all-modules &ndash;dir=rootpath -j 32**</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 漂亮地打印构建状态和持续时间</span>
+</span></span><span class="line"><span class="cl"><span class="k">function</span> _wrap_build<span class="o">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 如果设置了 ANDROID_QUIET_BUILD 为 true，则直接执行传入的命令，不显示额外信息</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[[</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">ANDROID_QUIET_BUILD</span><span class="k">:-</span><span class="si">}</span><span class="s2">&#34;</span> <span class="o">==</span> <span class="nb">true</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;</span><span class="nv">$@</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="nv">$?</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 记录构建开始时间（以秒为单位）</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">start_time</span><span class="o">=</span><span class="k">$(</span>date +<span class="s2">&#34;%s&#34;</span><span class="k">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 执行传入的命令（&#34;$@&#34; 表示所有参数）</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;</span><span class="nv">$@</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 获取命令的返回值（构建结果）</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">ret</span><span class="o">=</span><span class="nv">$?</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 记录构建结束时间</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">end_time</span><span class="o">=</span><span class="k">$(</span>date +<span class="s2">&#34;%s&#34;</span><span class="k">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 计算构建总耗时（秒数）</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">tdiff</span><span class="o">=</span><span class="k">$((</span><span class="nv">$end_time</span><span class="o">-</span><span class="nv">$start_time</span><span class="k">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 将总耗时转换为小时、分钟和秒</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">hours</span><span class="o">=</span><span class="k">$((</span><span class="nv">$tdiff</span> <span class="o">/</span> <span class="m">3600</span> <span class="k">))</span>     <span class="c1"># 总耗时除以 3600 得到小时数</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">mins</span><span class="o">=</span><span class="k">$((</span><span class="o">(</span><span class="nv">$tdiff</span> <span class="o">%</span> <span class="m">3600</span><span class="o">)</span> <span class="o">/</span> <span class="m">60</span><span class="k">))</span> <span class="c1"># 剩余时间除以 60 得到分钟数</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">secs</span><span class="o">=</span><span class="k">$((</span><span class="nv">$tdiff</span> <span class="o">%</span> <span class="m">60</span><span class="k">))</span>         <span class="c1"># 剩余时间为秒数</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 检查终端是否支持颜色输出（通过 tput colors 判断）</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">ncolors</span><span class="o">=</span><span class="k">$(</span>tput colors 2&gt;/dev/null<span class="k">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&#34;</span><span class="nv">$ncolors</span><span class="s2">&#34;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> <span class="nv">$ncolors</span> -ge <span class="m">8</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 如果支持 8 色及以上，定义颜色变量</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">color_failed</span><span class="o">=</span><span class="s1">$&#39;\E&#39;</span><span class="s2">&#34;[0;31m&#34;</span>   <span class="c1"># 红色，表示失败</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">color_success</span><span class="o">=</span><span class="s1">$&#39;\E&#39;</span><span class="s2">&#34;[0;32m&#34;</span> <span class="c1"># 绿色，表示成功</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">color_warning</span><span class="o">=</span><span class="s1">$&#39;\E&#39;</span><span class="s2">&#34;[0;33m&#34;</span> <span class="c1"># 黄色，表示警告</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">color_reset</span><span class="o">=</span><span class="s1">$&#39;\E&#39;</span><span class="s2">&#34;[00m&#34;</span>     <span class="c1"># 重置颜色</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 如果不支持颜色输出，清空颜色变量</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">color_failed</span><span class="o">=</span><span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">color_success</span><span class="o">=</span><span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">color_reset</span><span class="o">=</span><span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 打印空行，用于分隔输出</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 根据构建结果打印不同的消息</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> <span class="nv">$ret</span> -eq <span class="m">0</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 如果构建成功，打印绿色的成功消息</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> -n <span class="s2">&#34;</span><span class="si">${</span><span class="nv">color_success</span><span class="si">}</span><span class="s2">#### build completed successfully &#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 如果构建失败，打印红色的失败消息</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> -n <span class="s2">&#34;</span><span class="si">${</span><span class="nv">color_failed</span><span class="si">}</span><span class="s2">#### failed to build some targets &#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 根据耗时的不同范围，格式化输出时间</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> <span class="nv">$hours</span> -gt <span class="m">0</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 如果耗时超过 1 小时，显示小时、分钟和秒</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">printf</span> <span class="s2">&#34;(%02d:%02d:%02d (hh:mm:ss))&#34;</span> <span class="nv">$hours</span> <span class="nv">$mins</span> <span class="nv">$secs</span>
+</span></span><span class="line"><span class="cl">    <span class="k">elif</span> <span class="o">[</span> <span class="nv">$mins</span> -gt <span class="m">0</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 如果耗时超过 1 分钟但不足 1 小时，显示分钟和秒</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">printf</span> <span class="s2">&#34;(%02d:%02d (mm:ss))&#34;</span> <span class="nv">$mins</span> <span class="nv">$secs</span>
+</span></span><span class="line"><span class="cl">    <span class="k">elif</span> <span class="o">[</span> <span class="nv">$secs</span> -gt <span class="m">0</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 如果耗时不足 1 分钟，仅显示秒数</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">printf</span> <span class="s2">&#34;(%d seconds)&#34;</span> <span class="nv">$secs</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 打印结束标志并重置颜色</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s2">&#34; ####</span><span class="si">${</span><span class="nv">color_reset</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 打印空行，用于分隔输出</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 返回构建命令的原始退出码</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nv">$ret</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><h4 id="soong_uibash">soong_ui.bash<a hidden class="anchor" aria-hidden="true" href="#soong_uibash">#</a></h4>
+<ul>
+<li>前面加载工具类、记录时间、检查TOP变量、输出环境变量等等；</li>
+<li>加载microfactory.bash脚本；</li>
+<li>编译soong_ui、mk2rbc、rbcrun、release-config 4个工具；</li>
+<li>&ldquo;$(getoutdir)/soong_ui&rdquo; &ldquo;$@&rdquo; &ndash;&gt;  <strong>$(getoutdir)/soong_ui &ndash;build-mode &ndash;all-modules &ndash;dir=rootpath -j 32</strong></li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 引入 shell_utils.sh 脚本，提供一些辅助函数。</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 通过 $(dirname $BASH_SOURCE) 获取当前脚本所在的目录，然后定位到 ../make/shell_utils.sh 文件并加载它。</span>
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> <span class="k">$(</span><span class="nb">cd</span> <span class="k">$(</span>dirname <span class="nv">$BASH_SOURCE</span><span class="k">)</span> <span class="p">&amp;</span>&gt; /dev/null <span class="o">&amp;&amp;</span> <span class="nb">pwd</span><span class="k">)</span>/../make/shell_utils.sh
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 确保环境变量 $TOP 已正确设置为项目的顶级目录。</span>
+</span></span><span class="line"><span class="cl">require_top
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 记录 Soong 构建系统启动的时间戳，用于后续性能分析。</span>
+</span></span><span class="line"><span class="cl"><span class="k">case</span> <span class="k">$(</span>uname -s<span class="k">)</span> in
+</span></span><span class="line"><span class="cl">  Darwin<span class="o">)</span> <span class="c1"># 如果操作系统是 macOS</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">export</span> <span class="nv">TRACE_BEGIN_SOONG</span><span class="o">=</span><span class="sb">`</span><span class="nv">$TOP</span>/prebuilts/build-tools/path/darwin-x86/date +%s%3N<span class="sb">`</span>
+</span></span><span class="line"><span class="cl">    <span class="p">;;</span>
+</span></span><span class="line"><span class="cl">  *<span class="o">)</span> <span class="c1"># 其他操作系统（如 Linux）</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">export</span> <span class="nv">TRACE_BEGIN_SOONG</span><span class="o">=</span><span class="k">$(</span>date +%s%N<span class="k">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">;;</span>
+</span></span><span class="line"><span class="cl"><span class="k">esac</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 设置 COG 环境（如果需要），COG 是 Android 构建系统中的一个工具。</span>
+</span></span><span class="line"><span class="cl">setup_cog_env_if_needed
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 保存当前的工作目录（PWD），以便在 soong_ui 中使用。</span>
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">ORIGINAL_PWD</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 获取项目的顶级目录并导出为环境变量 $TOP。</span>
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">TOP</span><span class="o">=</span><span class="k">$(</span>gettop<span class="k">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 加载 Soong 构建系统的微工厂脚本 microfactory.bash。</span>
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> <span class="si">${</span><span class="nv">TOP</span><span class="si">}</span>/build/soong/scripts/microfactory.bash
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 使用 soong_build_go 编译多个 Go 语言工具：</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 1. soong_ui：Soong 的核心构建工具。</span>
+</span></span><span class="line"><span class="cl">soong_build_go soong_ui android/soong/cmd/soong_ui
+</span></span><span class="line"><span class="cl"><span class="c1"># 2. mk2rbc：将 Makefile 转换为 RBC（Rule-Based Compilation）格式的工具。</span>
+</span></span><span class="line"><span class="cl">soong_build_go mk2rbc android/soong/mk2rbc/mk2rbc
+</span></span><span class="line"><span class="cl"><span class="c1"># 3. rbcrun：运行 RBC 文件的工具。</span>
+</span></span><span class="line"><span class="cl">soong_build_go rbcrun rbcrun/rbcrun
+</span></span><span class="line"><span class="cl"><span class="c1"># 4. release-config：生成发布配置的工具。</span>
+</span></span><span class="line"><span class="cl">soong_build_go release-config android/soong/cmd/release_config/release_config
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 切换到项目的顶级目录。</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> <span class="si">${</span><span class="nv">TOP</span><span class="si">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 执行编译好的 soong_ui 工具，并将所有传入参数传递给它。</span>
+</span></span><span class="line"><span class="cl"><span class="nb">exec</span> <span class="s2">&#34;</span><span class="k">$(</span>getoutdir<span class="k">)</span><span class="s2">/soong_ui&#34;</span> <span class="s2">&#34;</span><span class="nv">$@</span><span class="s2">&#34;</span>
+</span></span></code></pre></div><h4 id="buildsoongscriptsmicrofactorybash">build/soong/scripts/microfactory.bash<a hidden class="anchor" aria-hidden="true" href="#buildsoongscriptsmicrofactorybash">#</a></h4>
+<ol>
+<li>设置go环境变量；</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 输入变量：</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  ${TOP}: Android 源码树的顶层目录</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  ${OUT_DIR}: 输出目录位置（默认为 ${TOP}/out）</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  ${OUT_DIR_COMMON_BASE}: 更改默认输出目录为</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#    ${OUT_DIR_COMMON_BASE}/$(basename ${TOP})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 确保 GOROOT 设置为树内的版本。</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 根据操作系统设置 GOROOT 环境变量。</span>
+</span></span><span class="line"><span class="cl"><span class="k">case</span> <span class="k">$(</span>uname<span class="k">)</span> in
+</span></span><span class="line"><span class="cl">    Linux<span class="o">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 对于 Linux 系统，将 GOROOT 设置为 Linux x86 的预编译 Go 二进制文件路径</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">export</span> <span class="nv">GOROOT</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/prebuilts/go/linux-x86/&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">;;</span>
+</span></span><span class="line"><span class="cl">    Darwin<span class="o">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 对于 macOS 系统，将 GOROOT 设置为 macOS x86 的预编译 Go 二进制文件路径</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">export</span> <span class="nv">GOROOT</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/prebuilts/go/darwin-x86/&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">;;</span>
+</span></span><span class="line"><span class="cl">    *<span class="o">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 如果操作系统不被识别，打印错误信息并退出</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> <span class="s2">&#34;未知的操作系统:&#34;</span> <span class="k">$(</span>uname<span class="k">)</span> &gt;<span class="p">&amp;</span><span class="m">2</span> <span class="o">&amp;&amp;</span> <span class="nb">exit</span> 1<span class="p">;;</span>
+</span></span><span class="line"><span class="cl"><span class="k">esac</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 函数：获取输出目录</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 此函数确定构建输出的位置。</span>
+</span></span><span class="line"><span class="cl"><span class="k">function</span> getoutdir
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 获取 OUT_DIR 的值，如果未设置则使用空字符串</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">out_dir</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">OUT_DIR</span><span class="p">-</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 如果 OUT_DIR 未设置，则检查 OUT_DIR_COMMON_BASE 是否设置</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> -z <span class="s2">&#34;</span><span class="si">${</span><span class="nv">out_dir</span><span class="si">}</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">OUT_DIR_COMMON_BASE</span><span class="p">-</span><span class="si">}</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># 如果 OUT_DIR_COMMON_BASE 已设置，则构造输出目录路径</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">out_dir</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">OUT_DIR_COMMON_BASE</span><span class="si">}</span><span class="s2">/</span><span class="k">$(</span>basename <span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="k">)</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># 否则，使用默认输出目录 &#39;out&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">out_dir</span><span class="o">=</span><span class="s2">&#34;out&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 如果输出目录不是绝对路径，则在其前面加上 TOP 以使其成为绝对路径</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[[</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">out_dir</span><span class="si">}</span><span class="s2">&#34;</span> !<span class="o">=</span> /* <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">out_dir</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">out_dir</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 打印确定的输出目录路径</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">out_dir</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 函数：引导 microfactory 从源代码构建请求的二进制文件（如果必要）</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 参数：</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  $1: 请求的二进制文件名称</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  $2: 包名称</span>
+</span></span><span class="line"><span class="cl"><span class="k">function</span> soong_build_go
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 设置构建所需的环境变量</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">BUILDDIR</span><span class="o">=</span><span class="k">$(</span>getoutdir<span class="k">)</span> <span class="se">\ </span>               <span class="c1"># 输出目录</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">SRCDIR</span><span class="o">=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span> <span class="se">\ </span>                       <span class="c1"># Android 源码树的顶层目录</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">BLUEPRINTDIR</span><span class="o">=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span>/build/blueprint <span class="se">\ </span> <span class="c1"># Blueprint 目录</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">EXTRA_ARGS</span><span class="o">=</span><span class="s2">&#34;-pkg-path android/soong=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/build/soong \
+</span></span></span><span class="line"><span class="cl"><span class="s2">                -pkg-path prebuilts/bazel/common/proto=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/prebuilts/bazel/common/proto \
+</span></span></span><span class="line"><span class="cl"><span class="s2">                -pkg-path rbcrun=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/build/make/tools/rbcrun \
+</span></span></span><span class="line"><span class="cl"><span class="s2">                -pkg-path google.golang.org/protobuf=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/external/golang-protobuf \
+</span></span></span><span class="line"><span class="cl"><span class="s2">                -pkg-path go.starlark.net=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/external/starlark-go&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 调用 build_go 函数，并传递提供的参数和额外参数</span>
+</span></span><span class="line"><span class="cl">    build_go <span class="nv">$@</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 引入 microfactory 脚本以包含其函数和配置</span>
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> <span class="si">${</span><span class="nv">TOP</span><span class="si">}</span>/build/blueprint/microfactory/microfactory.bash
+</span></span></code></pre></div><h4 id="buildblueprintmicrofactorymicrofactorybash">build/blueprint/microfactory/microfactory.bash<a hidden class="anchor" aria-hidden="true" href="#buildblueprintmicrofactorymicrofactorybash">#</a></h4>
+<ul>
+<li>检查microfactory bin文件是否已经生成（out目录下，bin文件是microfactory_&lt;系统类型后缀&gt;，我的是microfactory_Linux）
+<ul>
+<li>如果没有生成 &ndash;&gt; 使用 sed 命令将 package microfactory 改为 package main，并在文件末尾添加 main 函数调用 Main() &ndash;&gt; go run编译microfactory .go；</li>
+<li>如果已经存在 &ndash;&gt; 使用已经存在的microfactory；</li>
+</ul>
+</li>
+<li>组件编译参数，使用microfactory_Linux bin文件编译指定模块；</li>
+<li>如果microfactory_Linux 从源码编译，更新版本号；</li>
+</ul>
+<blockquote>
+<ol>
+<li>microfactory 模块2021年前会在<a href="https://github.com/google/blueprint">github</a>上进行维护，2021 年 5 月 3 日后，github上存档，AOSP内继续更新，并且 AOSP 中的 Blueprint 源代码树最终将不再在 Android 之外使用；（意思是以前microfactory可以运用在其他方面，归档之后仅能运用于Android了）；</li>
+</ol></blockquote>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 一组用于使用 microfactory 构建和运行 Go 代码的实用函数</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 输入变量：</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  ${GOROOT}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  ${BUILDDIR}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  ${BLUEPRINTDIR}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  ${SRCDIR}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 引导 microfactory 从源代码构建请求的二进制文件（如果必要）</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 参数：</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  $1: 请求的二进制文件名称</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  $2: 包名称</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  ${EXTRA_ARGS}: 传递给 microfactory 的额外参数 (-pkg-path 等)</span>
+</span></span><span class="line"><span class="cl"><span class="k">function</span> build_go
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 当 microfactory 发生足够大的变化以至于无法重新构建自身时递增。</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 例如，如果我们使用了一个旧版本不支持的新命令行参数。</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">mf_version</span><span class="o">=</span><span class="m">3</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">mf_src</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">BLUEPRINTDIR</span><span class="si">}</span><span class="s2">/microfactory&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">mf_bin</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">BUILDDIR</span><span class="si">}</span><span class="s2">/microfactory_</span><span class="k">$(</span>uname<span class="k">)</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">mf_version_file</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">BUILDDIR</span><span class="si">}</span><span class="s2">/.microfactory_</span><span class="k">$(</span>uname<span class="k">)</span><span class="s2">_version&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">built_bin</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">BUILDDIR</span><span class="si">}</span><span class="s2">/</span><span class="nv">$1</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">from_src</span><span class="o">=</span><span class="m">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 检查 microfactory 二进制文件和版本文件是否存在，并且版本匹配</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> -f <span class="s2">&#34;</span><span class="si">${</span><span class="nv">mf_bin</span><span class="si">}</span><span class="s2">&#34;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> -f <span class="s2">&#34;</span><span class="si">${</span><span class="nv">mf_version_file</span><span class="si">}</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">mf_version</span><span class="si">}</span><span class="s2">&#34;</span> -eq <span class="s2">&#34;</span><span class="k">$(</span>cat <span class="s2">&#34;</span><span class="si">${</span><span class="nv">mf_version_file</span><span class="si">}</span><span class="s2">&#34;</span><span class="k">)</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">from_src</span><span class="o">=</span><span class="m">0</span>
+</span></span><span class="line"><span class="cl">        <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> mf_cmd
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> <span class="nv">$from_src</span> -eq <span class="m">1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># `go run` 需要一个单一的主包，因此创建一个</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">local</span> <span class="nv">gen_src_dir</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">BUILDDIR</span><span class="si">}</span><span class="s2">/.microfactory_</span><span class="k">$(</span>uname<span class="k">)</span><span class="s2">_intermediates/src&#34;</span>
+</span></span><span class="line"><span class="cl">        mkdir -p <span class="s2">&#34;</span><span class="si">${</span><span class="nv">gen_src_dir</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">        sed <span class="s2">&#34;s/^package microfactory/package main/&#34;</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">mf_src</span><span class="si">}</span><span class="s2">/microfactory.go&#34;</span> &gt;<span class="s2">&#34;</span><span class="si">${</span><span class="nv">gen_src_dir</span><span class="si">}</span><span class="s2">/microfactory.go&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">printf</span> <span class="s2">&#34;\n//for use with go run\nfunc main() { Main() }\n&#34;</span> &gt;&gt;<span class="s2">&#34;</span><span class="si">${</span><span class="nv">gen_src_dir</span><span class="si">}</span><span class="s2">/microfactory.go&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nv">mf_cmd</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">GOROOT</span><span class="si">}</span><span class="s2">/bin/go run </span><span class="si">${</span><span class="nv">gen_src_dir</span><span class="si">}</span><span class="s2">/microfactory.go&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">mf_cmd</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">mf_bin</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 删除之前的跟踪文件</span>
+</span></span><span class="line"><span class="cl">    rm -f <span class="s2">&#34;</span><span class="si">${</span><span class="nv">BUILDDIR</span><span class="si">}</span><span class="s2">/.</span><span class="nv">$1</span><span class="s2">.trace&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># GOROOT 必须是绝对路径，因为 `go run` 会更改当前目录</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">GOROOT</span><span class="o">=</span><span class="k">$(</span><span class="nb">cd</span> <span class="nv">$GOROOT</span><span class="p">;</span> <span class="nb">pwd</span><span class="k">)</span> <span class="si">${</span><span class="nv">mf_cmd</span><span class="si">}</span> -b <span class="s2">&#34;</span><span class="si">${</span><span class="nv">mf_bin</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>            -pkg-path <span class="s2">&#34;github.com/google/blueprint=</span><span class="si">${</span><span class="nv">BLUEPRINTDIR</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>            -trimpath <span class="s2">&#34;</span><span class="si">${</span><span class="nv">SRCDIR</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>            <span class="si">${</span><span class="nv">EXTRA_ARGS</span><span class="si">}</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>            -o <span class="s2">&#34;</span><span class="si">${</span><span class="nv">built_bin</span><span class="si">}</span><span class="s2">&#34;</span> <span class="nv">$2</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 如果构建成功并且是从源代码构建的，则更新版本文件</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -eq <span class="m">0</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> <span class="nv">$from_src</span> -eq <span class="m">1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">mf_version</span><span class="si">}</span><span class="s2">&#34;</span> &gt;<span class="s2">&#34;</span><span class="si">${</span><span class="nv">mf_version_file</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><h3 id="命令推演">命令推演<a hidden class="anchor" aria-hidden="true" href="#命令推演">#</a></h3>
+<ul>
+<li>至此，暂时回到soong_ui.bash</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">soong_build_go soong_ui android/soong/cmd/soong_ui
+</span></span><span class="line"><span class="cl">↓
+</span></span><span class="line"><span class="cl">↓
+</span></span><span class="line"><span class="cl">↓
+</span></span><span class="line"><span class="cl">↓
+</span></span><span class="line"><span class="cl"><span class="c1"># soong_build_go 函数内部</span>
+</span></span><span class="line"><span class="cl"><span class="nv">BUILDDIR</span><span class="o">=</span><span class="k">$(</span>getoutdir<span class="k">)</span> <span class="se">\ </span>               <span class="c1"># 输出目录</span>
+</span></span><span class="line"><span class="cl"><span class="nv">SRCDIR</span><span class="o">=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span> <span class="se">\ </span>                       <span class="c1"># Android 源码树的顶层目录</span>
+</span></span><span class="line"><span class="cl"><span class="nv">BLUEPRINTDIR</span><span class="o">=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span>/build/blueprint <span class="se">\ </span> <span class="c1"># Blueprint 目录</span>
+</span></span><span class="line"><span class="cl"><span class="nv">EXTRA_ARGS</span><span class="o">=</span><span class="s2">&#34;-pkg-path android/soong=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/build/soong \
+</span></span></span><span class="line"><span class="cl"><span class="s2">            -pkg-path prebuilts/bazel/common/proto=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/prebuilts/bazel/common/proto \
+</span></span></span><span class="line"><span class="cl"><span class="s2">            -pkg-path rbcrun=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/build/make/tools/rbcrun \
+</span></span></span><span class="line"><span class="cl"><span class="s2">            -pkg-path google.golang.org/protobuf=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/external/golang-protobuf \
+</span></span></span><span class="line"><span class="cl"><span class="s2">            -pkg-path go.starlark.net=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/external/starlark-go&#34;</span>
+</span></span><span class="line"><span class="cl">build_go soong_ui android/soong/cmd/soong_ui
+</span></span><span class="line"><span class="cl">↓
+</span></span><span class="line"><span class="cl">↓
+</span></span><span class="line"><span class="cl">↓
+</span></span><span class="line"><span class="cl">↓
+</span></span><span class="line"><span class="cl"><span class="c1"># build_go 函数内部</span>
+</span></span><span class="line"><span class="cl"><span class="nb">local</span> <span class="nv">mf_version</span><span class="o">=</span><span class="m">3</span>
+</span></span><span class="line"><span class="cl"><span class="nb">local</span> <span class="nv">mf_src</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">BLUEPRINTDIR</span><span class="si">}</span><span class="s2">/microfactory&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">local</span> <span class="nv">mf_bin</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">BUILDDIR</span><span class="si">}</span><span class="s2">/microfactory_</span><span class="k">$(</span>uname<span class="k">)</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">local</span> <span class="nv">mf_version_file</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">BUILDDIR</span><span class="si">}</span><span class="s2">/.microfactory_</span><span class="k">$(</span>uname<span class="k">)</span><span class="s2">_version&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">local</span> <span class="nv">built_bin</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">BUILDDIR</span><span class="si">}</span><span class="s2">/soong_ui&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">local</span> <span class="nv">from_src</span><span class="o">=</span><span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="nv">GOROOT</span><span class="o">=</span><span class="k">$(</span><span class="nb">cd</span> <span class="nv">$GOROOT</span><span class="p">;</span> <span class="nb">pwd</span><span class="k">)</span> <span class="si">${</span><span class="nv">mf_cmd</span><span class="si">}</span> -b <span class="s2">&#34;</span><span class="si">${</span><span class="nv">mf_bin</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        -pkg-path <span class="s2">&#34;github.com/google/blueprint=</span><span class="si">${</span><span class="nv">BLUEPRINTDIR</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        -trimpath <span class="s2">&#34;</span><span class="si">${</span><span class="nv">SRCDIR</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="si">${</span><span class="nv">EXTRA_ARGS</span><span class="si">}</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        -o <span class="s2">&#34;</span><span class="si">${</span><span class="nv">built_bin</span><span class="si">}</span><span class="s2">&#34;</span> android/soong/cmd/soong_ui
+</span></span><span class="line"><span class="cl">↓
+</span></span><span class="line"><span class="cl">↓
+</span></span><span class="line"><span class="cl">↓
+</span></span><span class="line"><span class="cl">↓
+</span></span><span class="line"><span class="cl"><span class="c1"># 最终版本</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> TOP/prebuilts/go/linux-x86/  <span class="c1"># linux中go的环境变量路径</span>
+</span></span><span class="line"><span class="cl"><span class="nb">pwd</span> <span class="c1"># 打印绝对路径</span>
+</span></span><span class="line"><span class="cl"><span class="nv">GOROOT</span><span class="o">=</span><span class="k">$(</span><span class="nb">cd</span> <span class="nv">$GOROOT</span><span class="p">;</span> <span class="nb">pwd</span><span class="k">)</span> <span class="c1"># 赋值绝对路径给GOROOT，因为上面说go run会导致相对路径有问题</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 如果是源码编译</span>
+</span></span><span class="line"><span class="cl"><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span>/prebuilts/go/linux-x86/bin/go run <span class="si">${</span><span class="nv">TOP</span><span class="si">}</span>/out/.microfactory_Linux_intermediates/src/microfactory.go -b microfactory_Linux <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>-pkg-path <span class="s2">&#34;github.com/google/blueprint=/build/blueprint=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/build/blueprint/microfactory&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>-trimpath <span class="si">${</span><span class="nv">TOP</span><span class="si">}</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>-pkg-path android/soong<span class="o">=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span>/build/soong <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>            -pkg-path prebuilts/bazel/common/proto<span class="o">=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span>/prebuilts/bazel/common/proto <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>            -pkg-path <span class="nv">rbcrun</span><span class="o">=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span>/build/make/tools/rbcrun <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>            -pkg-path google.golang.org/protobuf<span class="o">=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span>/external/golang-protobuf <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>            -pkg-path go.starlark.net<span class="o">=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span>/external/starlark-go<span class="s2">&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">            -o &#34;</span>/out/soong_ui<span class="s2">&#34; android/soong/cmd/soong_ui
+</span></span></span><span class="line"><span class="cl"><span class="s2"># 如果是生成物
+</span></span></span><span class="line"><span class="cl"><span class="s2">microfactory_Linux -b microfactory_Linux \
+</span></span></span><span class="line"><span class="cl"><span class="s2">-pkg-path &#34;</span>github.com/google/blueprint<span class="o">=</span>/build/blueprint<span class="o">=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span>/build/blueprint/microfactory<span class="s2">&#34; \
+</span></span></span><span class="line"><span class="cl"><span class="s2">-trimpath </span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2"> \
+</span></span></span><span class="line"><span class="cl"><span class="s2">-pkg-path android/soong=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/build/soong \
+</span></span></span><span class="line"><span class="cl"><span class="s2">            -pkg-path prebuilts/bazel/common/proto=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/prebuilts/bazel/common/proto \
+</span></span></span><span class="line"><span class="cl"><span class="s2">            -pkg-path rbcrun=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/build/make/tools/rbcrun \
+</span></span></span><span class="line"><span class="cl"><span class="s2">            -pkg-path google.golang.org/protobuf=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/external/golang-protobuf \
+</span></span></span><span class="line"><span class="cl"><span class="s2">            -pkg-path go.starlark.net=</span><span class="si">${</span><span class="nv">TOP</span><span class="si">}</span><span class="s2">/external/starlark-go&#34;</span>
+</span></span><span class="line"><span class="cl">            -o <span class="s2">&#34;/out/soong_ui&#34;</span> android/soong/cmd/soong_ui
+</span></span></code></pre></div><blockquote>
+<p>其他3条mk2rbc、rbcrun、release-config的编译命令一样，可以自行推理；</p></blockquote>
+<ul>
+<li>总结：
+<ul>
+<li>microfactory是一个go语言写的编译框架，使用go语言编译，以前可以在许多领域通用，2021年后仅在AOSP适用；</li>
+<li>封装了build_go和soong_build_go两个方法，使用microfactory编译了soong_ui、mk2rbc、rbcrun、release-config命令；</li>
+<li>得到soong_ui后，直接使用soong_ui命令；</li>
+<li>于是编译命令变成了<strong>out/soong_ui &ndash;build-mode &ndash;all-modules &ndash;dir=rootpath -j 32</strong></li>
+</ul>
+</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/aosp/">AOSP</a></li>
+      <li><a href="http://localhost:1313/tags/%E7%BC%96%E8%AF%91/">编译</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/android9%E8%B6%85%E8%BF%872g%E5%8D%87%E7%BA%A7%E5%8C%85%E6%97%A0%E6%B3%95%E5%8D%87%E7%BA%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Android9超过2G升级包无法升级问题排查与解决方案</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/carlauncher-can-not-show-wallpaper--carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/">
+    <span class="title">Next »</span>
+    <br>
+    <span>CarLauncher can not show wallpaper  CarLauncher无法显示壁纸问题解决</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">The MaxJ Stack</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

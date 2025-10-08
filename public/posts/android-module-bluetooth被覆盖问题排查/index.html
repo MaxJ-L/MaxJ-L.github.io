@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Android Module Bluetooth被覆盖问题排查 | The MaxJ Stack</title>
+<meta name="keywords" content="AOSP, 编译">
+<meta name="description" content="Android Module Bluetooth被覆盖问题排查">
+<meta name="author" content="MaxJ-L">
+<link rel="canonical" href="http://localhost:1313/posts/android-module-bluetooth%E8%A2%AB%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.a5a528d13f8d3c68ee890d8e25b5ca6ed04936a57d0603a745e75a4ab6ce5944.css" integrity="sha256-paUo0T&#43;NPGjuiQ2OJbXKbtBJNqV9BgOnRedaSrbOWUQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/android-module-bluetooth%E8%A2%AB%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="The MaxJ Stack (Alt + H)">The MaxJ Stack</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Android Module Bluetooth被覆盖问题排查
+    </h1>
+    <div class="post-meta"><span title='2025-10-08 22:28:30 +0800 CST'>October 8, 2025</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;MaxJ-L
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e9%97%ae%e9%a2%98%e8%83%8c%e6%99%af" aria-label="问题背景">问题背景</a></li>
+                <li>
+                    <a href="#%e6%8e%92%e6%9f%a5%e8%bf%87%e7%a8%8b" aria-label="排查过程">排查过程</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>Date：2025-03-07</p>
+<h3 id="问题背景">问题背景<a hidden class="anchor" aria-hidden="true" href="#问题背景">#</a></h3>
+<ol>
+<li>packages/module/Bluetooth/下的修改会被覆盖，每次编译这里都会产生变化；</li>
+</ol>
+<h3 id="排查过程">排查过程<a hidden class="anchor" aria-hidden="true" href="#排查过程">#</a></h3>
+<ul>
+<li>逐步根据编译脚本进行排查， source build/envsetup.sh &ndash;&gt; lunch &ndash;&gt; 8775脚本等；</li>
+<li>每步命令之后都git status查看路径下是否产生变化；</li>
+</ul>
+<ol>
+<li>
+<p>已经确定是lunch的问题；</p>
+</li>
+<li>
+<p>查看lunch源码，源码在<code>build/envsetup.sh</code>中，lunch方法会调用build_build_var_cache；</p>
+</li>
+<li>
+<p>build_build_var_cache最终调用soongui，而且是&ndash;dumpvars-mode模式；</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="k">function</span> build_build_var_cache<span class="o">()</span>  
+</span></span><span class="line"><span class="cl"><span class="o">{</span>  
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">T</span><span class="o">=</span><span class="k">$(</span>gettop<span class="k">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="c1"># Grep out the variable names from the script.  </span>
+</span></span><span class="line"><span class="cl">    <span class="nv">cached_vars</span><span class="o">=(</span><span class="sb">`</span>cat <span class="nv">$T</span>/build/envsetup.sh <span class="p">|</span> tr <span class="s1">&#39;()&#39;</span> <span class="s1">&#39;  &#39;</span> <span class="p">|</span> awk <span class="s1">&#39;{for(i=1;i&lt;=NF;i++) if($i~/get_build_var/) print $(i+1)}&#39;</span> <span class="p">|</span> sort -u <span class="p">|</span> tr <span class="s1">&#39;\n&#39;</span> <span class="s1">&#39; &#39;</span><span class="sb">`</span><span class="o">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="nv">cached_abs_vars</span><span class="o">=(</span><span class="sb">`</span>cat <span class="nv">$T</span>/build/envsetup.sh <span class="p">|</span> tr <span class="s1">&#39;()&#39;</span> <span class="s1">&#39;  &#39;</span> <span class="p">|</span> awk <span class="s1">&#39;{for(i=1;i&lt;=NF;i++) if($i~/get_abs_build_var/) print $(i+1)}&#39;</span> <span class="p">|</span> sort -u <span class="p">|</span> tr <span class="s1">&#39;\n&#39;</span> <span class="s1">&#39; &#39;</span><span class="sb">`</span><span class="o">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="c1"># Call the build system to dump the &#34;&lt;val&gt;=&lt;value&gt;&#34; pairs as a shell script.  </span>
+</span></span><span class="line"><span class="cl">    <span class="nv">build_dicts_script</span><span class="o">=</span><span class="sb">`</span><span class="se">\b</span>uiltin <span class="nb">cd</span> <span class="nv">$T</span><span class="p">;</span> build/soong/soong_ui.bash --dumpvars-mode <span class="se">\ </span> 
+</span></span><span class="line"><span class="cl">                        --vars<span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">cached_vars</span><span class="p">[*]</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\ </span> 
+</span></span><span class="line"><span class="cl">                        --abs-vars<span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">cached_abs_vars</span><span class="p">[*]</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\ </span> 
+</span></span><span class="line"><span class="cl">                        --var-prefix<span class="o">=</span>var_cache_ <span class="se">\ </span> 
+</span></span><span class="line"><span class="cl">                        --abs-var-prefix<span class="o">=</span>abs_var_cache_<span class="sb">`</span>  
+</span></span><span class="line"><span class="cl">    <span class="nb">local</span> <span class="nv">ret</span><span class="o">=</span><span class="nv">$?</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> <span class="nv">$ret</span> -ne <span class="m">0</span> <span class="o">]</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">then</span>  
+</span></span><span class="line"><span class="cl">        <span class="nb">unset</span> build_dicts_script  
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nv">$ret</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>  
+</span></span><span class="line"><span class="cl">    <span class="c1"># Execute the script to store the &#34;&lt;val&gt;=&lt;value&gt;&#34; pairs as shell variables.  </span>
+</span></span><span class="line"><span class="cl">    <span class="nb">eval</span> <span class="s2">&#34;</span><span class="nv">$build_dicts_script</span><span class="s2">&#34;</span>  
+</span></span><span class="line"><span class="cl">    <span class="nv">ret</span><span class="o">=</span><span class="nv">$?</span>  
+</span></span><span class="line"><span class="cl">    <span class="nb">unset</span> build_dicts_script  
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> <span class="nv">$ret</span> -ne <span class="m">0</span> <span class="o">]</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">then</span>  
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nv">$ret</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>  
+</span></span><span class="line"><span class="cl">    <span class="nv">BUILD_VAR_CACHE_READY</span><span class="o">=</span><span class="s2">&#34;true&#34;</span>  
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><ol start="4">
+<li>
+<p>soong里面这里有点弯绕，看不下去，但是记得好像有日志开关，查看有没有日志或者日志开关在哪里；</p>
+</li>
+<li>
+<p>out目录下，查找soong的日志，从修改时间上大概可以猜出确定这几份；
+<img alt="Pasted image 20250307100959" loading="lazy" src="/posts/android-module-bluetooth%E8%A2%AB%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/Pasted%20image%2020250307100959.png"></p>
+</li>
+<li>
+<p>拉下日志查找蓝牙日志
+<img alt="Pasted image 20250307101211" loading="lazy" src="/posts/android-module-bluetooth%E8%A2%AB%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/Pasted%20image%2020250307101211.png"></p>
+</li>
+<li>
+<p>这里已经很明晰，调用的链路和脚本；</p>
+</li>
+<li>
+<p>阅读<code>qva_bt.sh</code></p>
+<ol>
+<li>需要执行的代码清单在qva_bt_source.txt里面；</li>
+<li>如果是Android.bp，会在源路径加后缀.disable &ndash;&gt; 不存在 &ndash;&gt; 不复制；</li>
+<li>复制时判断路径指定的代码与目标路径的代码是否相同 &ndash;&gt; 不同就复制过去；</li>
+</ol>
+</li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/aosp/">AOSP</a></li>
+      <li><a href="http://localhost:1313/tags/%E7%BC%96%E8%AF%91/">编译</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/carlauncher%E5%AF%BC%E5%85%A5%E5%88%B0androidstudio%E6%96%B9%E6%B3%95/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>CarLauncher导入到AndroidStudio方法</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/android9%E8%B6%85%E8%BF%872g%E5%8D%87%E7%BA%A7%E5%8C%85%E6%97%A0%E6%B3%95%E5%8D%87%E7%BA%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Android9超过2G升级包无法升级问题排查与解决方案</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">The MaxJ Stack</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -4,10 +4,87 @@
     <title>Posts on The MaxJ Stack</title>
     <link>http://localhost:1313/posts/</link>
     <description>Recent content in Posts on The MaxJ Stack</description>
-    <generator>Hugo -- 0.150.1</generator>
+    <generator>Hugo -- 0.147.7</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 01 Oct 2025 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 09 Oct 2025 01:31:59 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CarLauncher显示尺寸不正常</title>
+      <link>http://localhost:1313/posts/carlauncher%E6%98%BE%E7%A4%BA%E5%B0%BA%E5%AF%B8%E4%B8%8D%E6%AD%A3%E5%B8%B8/</link>
+      <pubDate>Thu, 09 Oct 2025 01:31:59 +0800</pubDate>
+      <guid>http://localhost:1313/posts/carlauncher%E6%98%BE%E7%A4%BA%E5%B0%BA%E5%AF%B8%E4%B8%8D%E6%AD%A3%E5%B8%B8/</guid>
+      <description>CarLauncher显示尺寸不正常</description>
+    </item>
+    <item>
+      <title>CarLauncher导入到AndroidStudio方法</title>
+      <link>http://localhost:1313/posts/carlauncher%E5%AF%BC%E5%85%A5%E5%88%B0androidstudio%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Thu, 09 Oct 2025 01:30:01 +0800</pubDate>
+      <guid>http://localhost:1313/posts/carlauncher%E5%AF%BC%E5%85%A5%E5%88%B0androidstudio%E6%96%B9%E6%B3%95/</guid>
+      <description>CarLauncher导入到AndroidStudio方法</description>
+    </item>
+    <item>
+      <title>Android Module Bluetooth被覆盖问题排查</title>
+      <link>http://localhost:1313/posts/android-module-bluetooth%E8%A2%AB%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/android-module-bluetooth%E8%A2%AB%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</guid>
+      <description>Android Module Bluetooth被覆盖问题排查</description>
+    </item>
+    <item>
+      <title>Android9超过2G升级包无法升级问题排查与解决方案</title>
+      <link>http://localhost:1313/posts/android9%E8%B6%85%E8%BF%872g%E5%8D%87%E7%BA%A7%E5%8C%85%E6%97%A0%E6%B3%95%E5%8D%87%E7%BA%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/android9%E8%B6%85%E8%BF%872g%E5%8D%87%E7%BA%A7%E5%8C%85%E6%97%A0%E6%B3%95%E5%8D%87%E7%BA%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</guid>
+      <description>Android9超过2G升级包无法升级问题排查与解决方案</description>
+    </item>
+    <item>
+      <title>AOSP编译流程1（脚本篇）</title>
+      <link>http://localhost:1313/posts/aosp%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B1%E8%84%9A%E6%9C%AC%E7%AF%87/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/aosp%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B1%E8%84%9A%E6%9C%AC%E7%AF%87/</guid>
+      <description>AOSP编译流程1（脚本篇）</description>
+    </item>
+    <item>
+      <title>CarLauncher can not show wallpaper  CarLauncher无法显示壁纸问题解决</title>
+      <link>http://localhost:1313/posts/carlauncher-can-not-show-wallpaper--carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/carlauncher-can-not-show-wallpaper--carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</guid>
+      <description>CarLauncher can not show wallpaper  CarLauncher无法显示壁纸问题解决</description>
+    </item>
+    <item>
+      <title>CarLauncher无法显示壁纸问题解决 - 主题设置导致</title>
+      <link>http://localhost:1313/posts/carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3---%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E5%AF%BC%E8%87%B4/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3---%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E5%AF%BC%E8%87%B4/</guid>
+      <description>CarLauncher无法显示壁纸问题解决 - 主题设置导致</description>
+    </item>
+    <item>
+      <title>Qualcomm8775 QTIVehicle与原生Vehicle STR问题冲突解决</title>
+      <link>http://localhost:1313/posts/qualcomm8775-qtivehicle%E4%B8%8E%E5%8E%9F%E7%94%9Fvehicle-str%E9%97%AE%E9%A2%98%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/qualcomm8775-qtivehicle%E4%B8%8E%E5%8E%9F%E7%94%9Fvehicle-str%E9%97%AE%E9%A2%98%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3/</guid>
+      <description>Qualcomm8775 QTIVehicle与原生Vehicle STR问题冲突解决</description>
+    </item>
+    <item>
+      <title>Repo sync报错 Failing Repos Try re-running with -j1 --fail-fast to exit at the first error</title>
+      <link>http://localhost:1313/posts/repo-sync%E6%8A%A5%E9%94%99-failing-repos-try-re-running-with--j1---fail-fast-to-exit-at-the-first-error/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/repo-sync%E6%8A%A5%E9%94%99-failing-repos-try-re-running-with--j1---fail-fast-to-exit-at-the-first-error/</guid>
+      <description>Repo sync报错 Failing Repos Try re-running with -j1 &amp;ndash;fail-fast to exit at the first error</description>
+    </item>
+    <item>
+      <title>进程接口被频繁调用致CPU占用率过高排查流程</title>
+      <link>http://localhost:1313/posts/%E8%BF%9B%E7%A8%8B%E6%8E%A5%E5%8F%A3%E8%A2%AB%E9%A2%91%E7%B9%81%E8%B0%83%E7%94%A8%E8%87%B4cpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E6%8E%92%E6%9F%A5%E6%B5%81%E7%A8%8B/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/%E8%BF%9B%E7%A8%8B%E6%8E%A5%E5%8F%A3%E8%A2%AB%E9%A2%91%E7%B9%81%E8%B0%83%E7%94%A8%E8%87%B4cpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E6%8E%92%E6%9F%A5%E6%B5%81%E7%A8%8B/</guid>
+      <description>进程接口被频繁调用致CPU占用率过高排查流程</description>
+    </item>
+    <item>
+      <title>Android Studio导入AOSP源码</title>
+      <link>http://localhost:1313/posts/android-studio%E5%AF%BC%E5%85%A5aosp%E6%BA%90%E7%A0%81/</link>
+      <pubDate>Wed, 08 Oct 2025 12:00:16 +0800</pubDate>
+      <guid>http://localhost:1313/posts/android-studio%E5%AF%BC%E5%85%A5aosp%E6%BA%90%E7%A0%81/</guid>
+      <description>Android Studio导入AOSP源码</description>
+    </item>
     <item>
       <title>自定义AVD镜像搭建和AVD与主机UDP通信</title>
       <link>http://localhost:1313/posts/%E8%87%AA%E5%AE%9A%E4%B9%89avd%E9%95%9C%E5%83%8F%E6%90%AD%E5%BB%BA%E5%92%8Cavd%E4%B8%8E%E4%B8%BB%E6%9C%BAudp%E9%80%9A%E4%BF%A1/</link>
@@ -49,6 +126,27 @@
       <pubDate>Sun, 21 Sep 2025 02:33:41 +0800</pubDate>
       <guid>http://localhost:1313/posts/githubpages%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%95%99%E7%A8%8B/</guid>
       <description>Hugo + GitHub Pages 博客搭建全攻略：从入门到自动化部署（含踩坑笔记）</description>
+    </item>
+    <item>
+      <title>开发技巧：快速拉取.repo搭建编译环境</title>
+      <link>http://localhost:1313/posts/%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7%E5%BF%AB%E9%80%9F%E6%8B%89%E5%8F%96.repo%E6%90%AD%E5%BB%BA%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/</link>
+      <pubDate>Mon, 28 Jul 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7%E5%BF%AB%E9%80%9F%E6%8B%89%E5%8F%96.repo%E6%90%AD%E5%BB%BA%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/</guid>
+      <description>开发技巧：快速拉取.repo搭建编译环境</description>
+    </item>
+    <item>
+      <title>Android-15.0.0_r1 lunch无法显示menu.md</title>
+      <link>http://localhost:1313/posts/android-15.0.0_r1-lunch%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BAmenu.md/</link>
+      <pubDate>Tue, 08 Jul 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/android-15.0.0_r1-lunch%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BAmenu.md/</guid>
+      <description>Android-15.0.0_r1 lunch无法显示menu.md</description>
+    </item>
+    <item>
+      <title>Android windowIsTranslucent导致无法切换activity</title>
+      <link>http://localhost:1313/posts/android-windowistranslucent%E5%AF%BC%E8%87%B4%E6%97%A0%E6%B3%95%E5%88%87%E6%8D%A2activity/</link>
+      <pubDate>Thu, 12 Jun 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/android-windowistranslucent%E5%AF%BC%E8%87%B4%E6%97%A0%E6%B3%95%E5%88%87%E6%8D%A2activity/</guid>
+      <description>Android windowIsTranslucent导致无法切换activity</description>
     </item>
   </channel>
 </rss>

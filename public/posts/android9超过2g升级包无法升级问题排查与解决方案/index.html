@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Android9超过2G升级包无法升级问题排查与解决方案 | The MaxJ Stack</title>
+<meta name="keywords" content="Android, 升级">
+<meta name="description" content="Android9超过2G升级包无法升级问题排查与解决方案">
+<meta name="author" content="MaxJ-L">
+<link rel="canonical" href="http://localhost:1313/posts/android9%E8%B6%85%E8%BF%872g%E5%8D%87%E7%BA%A7%E5%8C%85%E6%97%A0%E6%B3%95%E5%8D%87%E7%BA%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.a5a528d13f8d3c68ee890d8e25b5ca6ed04936a57d0603a745e75a4ab6ce5944.css" integrity="sha256-paUo0T&#43;NPGjuiQ2OJbXKbtBJNqV9BgOnRedaSrbOWUQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/android9%E8%B6%85%E8%BF%872g%E5%8D%87%E7%BA%A7%E5%8C%85%E6%97%A0%E6%B3%95%E5%8D%87%E7%BA%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="The MaxJ Stack (Alt + H)">The MaxJ Stack</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Android9超过2G升级包无法升级问题排查与解决方案
+    </h1>
+    <div class="post-meta"><span title='2025-10-08 22:28:30 +0800 CST'>October 8, 2025</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;MaxJ-L
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#android9%e8%b6%85%e8%bf%872g%e5%8d%87%e7%ba%a7%e5%8c%85%e6%97%a0%e6%b3%95%e5%8d%87%e7%ba%a7%e9%97%ae%e9%a2%98%e6%8e%92%e6%9f%a5%e4%b8%8e%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88" aria-label="Android9超过2G升级包无法升级问题排查与解决方案">Android9超过2G升级包无法升级问题排查与解决方案</a><ul>
+                        
+                <li>
+                    <a href="#%e9%97%ae%e9%a2%98%e6%8f%8f%e8%bf%b0" aria-label="问题描述">问题描述</a><ul>
+                        
+                <li>
+                    <a href="#%e9%97%ae%e9%a2%98%e8%a1%a8%e8%b1%a1" aria-label="问题表象">问题表象</a></li>
+                <li>
+                    <a href="#update_engine%e6%8a%a5%e9%94%99" aria-label="update_engine报错">update_engine报错</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%8e%9f%e5%9b%a0%e5%88%86%e6%9e%90" aria-label="原因分析">原因分析</a><ul>
+                        
+                <li>
+                    <a href="#%e5%8d%87%e7%ba%a7%e5%8c%85%e5%81%8f%e7%a7%bb%e9%87%8f" aria-label="升级包偏移量">升级包偏移量</a></li>
+                <li>
+                    <a href="#metadata%e7%9a%84%e5%81%8f%e7%a7%bb%e9%87%8f%e6%98%af%e5%a6%82%e4%bd%95%e7%94%9f%e6%88%90" aria-label="metadata的偏移量是如何生成？">metadata的偏移量是如何生成？</a></li>
+                <li>
+                    <a href="#payloadbin%e7%9a%84%e5%ae%9e%e9%99%85%e5%81%8f%e7%a7%bb%e9%87%8f%e7%94%b1%e6%9d%a5" aria-label="payload.bin的实际偏移量由来？">payload.bin的实际偏移量由来？</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e8%a7%a3%e5%86%b3%e6%96%b9%e6%b3%95" aria-label="解决方法">解决方法</a><ul>
+                        
+                <li>
+                    <a href="#%e6%96%b9%e6%b3%951" aria-label="方法1：">方法1：</a></li>
+                <li>
+                    <a href="#%e6%96%b9%e6%b3%952%e6%8e%a8%e8%8d%90%e8%a7%a3%e5%86%b3%e6%96%b9%e6%b3%95" aria-label="方法2（推荐解决方法）：">方法2（推荐解决方法）：</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h3 id="android9超过2g升级包无法升级问题排查与解决方案">Android9超过2G升级包无法升级问题排查与解决方案<a hidden class="anchor" aria-hidden="true" href="#android9超过2g升级包无法升级问题排查与解决方案">#</a></h3>
+<h4 id="问题描述">问题描述<a hidden class="anchor" aria-hidden="true" href="#问题描述">#</a></h4>
+<h5 id="问题表象">问题表象<a hidden class="anchor" aria-hidden="true" href="#问题表象">#</a></h5>
+<p>Android9系统，当升级包大小超过2G的时候，升级失败。</p>
+<h5 id="update_engine报错">update_engine报错<a hidden class="anchor" aria-hidden="true" href="#update_engine报错">#</a></h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">04-27 11:09:50.511 <span class="m">2293</span> <span class="m">2293</span> E update_engine:<span class="o">[</span>0427/110950.511596:ERROR:payload_metadata.cc<span class="o">(</span>74<span class="o">)]</span> Bad payload format -- invalid delta magic.
+</span></span><span class="line"><span class="cl">04-27 11:09:50.511 <span class="m">2293</span> <span class="m">2293</span> E update_engine:<span class="o">[</span>0427/110950.511679:ERROR:download_action.cc<span class="o">(</span>337<span class="o">)]</span> Error ErrorCode::kDownloadInvalidMetadataMagicString <span class="o">(</span>21<span class="o">)</span> in DeltaPerformet<span class="err">&#39;</span>s Write method when processing the received payload -- Terminating processing
+</span></span></code></pre></div><h4 id="原因分析">原因分析<a hidden class="anchor" aria-hidden="true" href="#原因分析">#</a></h4>
+<p>通过日志可以看出update_engine报错错误码kDownloadInvalidMetadataMagicString（21），通过查阅update_engine源码得知，在update_engine中是因为解析出来的payload.bin前面的元数据不是&rsquo;CrAU&rsquo;（Android源码定义的就是CrAU）导致；</p>
+<h5 id="升级包偏移量">升级包偏移量<a hidden class="anchor" aria-hidden="true" href="#升级包偏移量">#</a></h5>
+<p>通过参考资料得知：</p>
+<ul>
+<li>.zip文件的文件格式中，会在生成一定的头部信息，然后内部的文件会按一定规则顺序排列在后面；</li>
+<li>压缩包内容中，头部有30个字节是固定的，然后后面就到文件名（可变长度）、拓展区（可变长度），这些加起来就是头部内容的长度。</li>
+</ul>
+<blockquote>
+<p>参考： <a href="https://blog.csdn.net/guyongqiangx/article/details/122498561">Android A/B System OTA分析（六）如何获取 payload 的 offset 和 size_packageoffset size_洛奇看世界的博客-CSDN博客</a></p></blockquote>
+<p>metadata数据中的偏移量与升级包实际的偏移量对不上，这个偏移量其实指的是压缩包内文件数据(payload.bin)在文件（升级包）中的偏移量。系统打包的时候会将这个偏移量解析出来写在metadata中，而update_engine会根据metadata文件中定义的这个偏移量提取payload.bin，并判断payload.bin的前4个字节是不是&rsquo;CrAU&rsquo;，如果提取出来的payload.bin的前4个字节与&rsquo;CrAU&rsquo;不匹配，则证明偏移量错误，导致提取的payload.bin文件不正确；</p>
+<p>既然得知这原理，后面主要是看针对一个问题：</p>
+<p>一个问题：为什么metadata中的偏移量和实际压缩包的偏移量对应不上？ &ndash;&gt; metadata的偏移量是如何生成的？</p>
+<h5 id="metadata的偏移量是如何生成">metadata的偏移量是如何生成？<a hidden class="anchor" aria-hidden="true" href="#metadata的偏移量是如何生成">#</a></h5>
+<p>从打包的python脚本ota_from_target_files.py入手，具体的排查过程不赘述。</p>
+<p>最终排查到这个偏移量的计算有两处：其中一处是用于解析偏移量，一处是用来做重新计算校验的（因为解析之后经过了一些签名之类的处理，所以重新校验）。这里能校验过，是因为解析和校验用的接口和公式是一致的。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">    <span class="n">payload_offset</span> <span class="o">=</span> <span class="n">payload_info</span><span class="o">.</span><span class="n">header_offset</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">payload_info</span><span class="o">.</span><span class="n">FileHeader</span><span class="p">())</span> <span class="o">//</span> <span class="n">计算</span>
+</span></span><span class="line"><span class="cl">    <span class="n">offset</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">header_ofet</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">FileHeader</span><span class="p">())</span> <span class="o">//</span> <span class="n">生成</span>
+</span></span></code></pre></div><p>通过在python脚本添加打印得知， 升级包无论大于或小于2G：</p>
+<ul>
+<li>payload_info.header_offset、 info.header_ofet均不变，len(payload_info.FileHeader())、len(info.FileHeader())均改变了；</li>
+<li>payload_info.header_offset和info.header_ofet是文件在压缩包本身的偏移量（例如如果文件在压缩包排在第2个，它本身的偏移量就要加上第一个文件占用的部分）；</li>
+<li>len(payload_info.FileHeader())、len(info.FileHeader())是压缩包内此文件的头部。这两部分偏移量加起来， 才是这文件在压缩包中要提取的数据；</li>
+</ul>
+<p>制作一个超过2G的升级包，并通过imhex工具查看升级包、zipinfo命令查看压缩包信息，均发现payload.bin在压缩包的偏移量为47，但是通过python打印出来的是67。</p>
+<p>因此继续查阅python代码，最终发现fileHeader的extra拓展区部分在大于2G的时候，额外计算多了一部分信息。下面代码会对升级包进行判断，若文件大小或者压缩包大小大于ZIP64_LIMIT大小，则认为是zip64；若属于zip64，会在extra拓展区部分额外增加了一部分数据。通过打印复现，把这部分数据减掉，刚好是实际压缩包的47。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">if</span> <span class="n">zip64</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">zip64</span> <span class="o">=</span> <span class="n">file_size</span> <span class="o">&gt;</span> <span class="n">ZIP64_LIMIT</span> <span class="ow">or</span> <span class="n">compress_size</span> <span class="o">&gt;</span> <span class="n">ZIP64_LIMIT</span> <span class="c1"># 这里的ZIP64_LIMIT是2G</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">zip64</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;&lt;HHQQ&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">extra</span> <span class="o">=</span> <span class="n">extra</span> <span class="o">+</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                    <span class="mi">1</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="n">file_size</span><span class="p">,</span> <span class="n">compress_size</span><span class="p">)</span>
+</span></span></code></pre></div><p>这里便是metadata中偏移量的计算，那么在打包时，payload.bin又是如何打进zip的呢？</p>
+<h5 id="payloadbin的实际偏移量由来">payload.bin的实际偏移量由来？<a hidden class="anchor" aria-hidden="true" href="#payloadbin的实际偏移量由来">#</a></h5>
+<p>从打包的python脚本ota_from_target_files.py入手，具体的排查过程不赘述。最终排查到common.py的ZipWrite方法。</p>
+<p>通过注释的意思和代码，可以得知，Android为了能够编译出2G以上的包，将zipFile的ZIP64_LIMIT改为了4G，这个ZIP64_LIMIT就上面用来判断是否为zip64的一个条件。</p>
+<p>zip_file.write在python中同样用到了FileHeader()方法，但是写入的时候因为小于4G，不认为是zip64，所以extra另外的那一部分数据没有写入，但是在解析的时候却认为是zip64，导致写入和解析所获取的长度不一致。update_engine根据metadata的偏移量解析出来的payload.bin自然就不正确了。</p>
+<p>总结：脚本在写入升级包是，认为文件&lt;4G，使用zip32格式写入，解析升级包时认为文件&gt;2G，按照zip64格式解析计算偏移量，最终导致metadata中的偏移量偏大。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">ZipWrite</span><span class="p">(</span><span class="n">zip_file</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">arcname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">perms</span><span class="o">=</span><span class="mo">0o644</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">             <span class="n">compress_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="kn">import</span> <span class="nn">datetime</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1"># http://b/18015246</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># Python 2.7&#39;s zipfile implementation wrongly thinks that zip64 is required</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># for files larger than 2GiB. We can work around this by adjusting their</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># limit. Note that `zipfile.writestr()` will not work for strings larger than</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># 2GiB. The Python interpreter sometimes rejects strings that large (though</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># it isn&#39;t clear to me exactly what circumstances cause this).</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># `zipfile.write()` must be used directly to work around this.</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">#</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># This mess can be avoided if we port to python3.</span>
+</span></span><span class="line"><span class="cl">  <span class="n">saved_zip64_limit</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZIP64_LIMIT</span>
+</span></span><span class="line"><span class="cl">  <span class="n">zipfile</span><span class="o">.</span><span class="n">ZIP64_LIMIT</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="n">compress_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">compress_type</span> <span class="o">=</span> <span class="n">zip_file</span><span class="o">.</span><span class="n">compression</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="n">arcname</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">arcname</span> <span class="o">=</span> <span class="n">filename</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="n">saved_stat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># `zipfile.write()` doesn&#39;t allow us to pass ZipInfo, so just modify the</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># file to be zipped and reset it when we&#39;re done.</span>
+</span></span><span class="line"><span class="cl">    <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">perms</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Use a fixed timestamp so the output is repeatable.</span>
+</span></span><span class="line"><span class="cl">    <span class="n">epoch</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">timestamp</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2009</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">epoch</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">os</span><span class="o">.</span><span class="n">utime</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">zip_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">arcname</span><span class="o">=</span><span class="n">arcname</span><span class="p">,</span> <span class="n">compress_type</span><span class="o">=</span><span class="n">compress_type</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="k">finally</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">saved_stat</span><span class="o">.</span><span class="n">st_mode</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">os</span><span class="o">.</span><span class="n">utime</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="p">(</span><span class="n">saved_stat</span><span class="o">.</span><span class="n">st_atime</span><span class="p">,</span> <span class="n">saved_stat</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">zipfile</span><span class="o">.</span><span class="n">ZIP64_LIMIT</span> <span class="o">=</span> <span class="n">saved_zip64_limit</span>
+</span></span></code></pre></div><h4 id="解决方法">解决方法<a hidden class="anchor" aria-hidden="true" href="#解决方法">#</a></h4>
+<h5 id="方法1">方法1：<a hidden class="anchor" aria-hidden="true" href="#方法1">#</a></h5>
+<p>既然知道是因为python的FileHeader()会在文件头部的拓展区部分额外增加了导致的，那可以直接根据zip压缩包的结构，将公式改为</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">offset</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">header_offset</span> <span class="o">+</span> <span class="n">info</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">+</span> <span class="n">info</span><span class="o">.</span><span class="n">extra</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">+</span> <span class="mi">30</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 可以参考上面提供的链接文章， 30这里是头部的固定长度， 但是尽量推荐下面官方的解决办法</span>
+</span></span></code></pre></div><h5 id="方法2推荐解决方法">方法2（推荐解决方法）：<a hidden class="anchor" aria-hidden="true" href="#方法2推荐解决方法">#</a></h5>
+<p>根据AOSP官方代码库的修改记录，移植相关方法。</p>
+<blockquote>
+<p>Commit:25ab998 Fix a bug in computing streaming property of payload.bin When computing the data offset of an entry in zip file, we used length of extra field from central directory. That is correct most of the time but wrong if the extra field in central directory has different length than the one in local file directory. Since python&rsquo;s zipfile doesn&rsquo;t provide an API to access local file header, we need to parse local file header ourselves and extract length of extra field. An incorrect offset will cause magic mismatch error from update_engine, as update_engine expects to find uncompressed payload at the recorded offset. Test: th, partner verification Bug: 191443484 Change-Id: Id670cd79b0bd65adffaaa5224ae4f8065d66b358、 <a href="mailto:zhangkelvin@google.com">zhangkelvin@google.com</a>(author) eventCommitted on2021-07-28 11:40 PM</p></blockquote>
+<p>因为本地代码和2021-07的代码还是存在较大差异。仅移植需要用到的部分。</p>
+<p>ota_from_target_files.py方法增加以下改动（megre部分）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># ************** merge start *************</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># https://cs.android.com/android/_/android/platform/build/+/928c2341a6abc3b1ddb7ddd7652e78b67c7ef7a9</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">GetZipEntryOffset</span><span class="p">(</span><span class="n">zfp</span><span class="p">,</span> <span class="n">entry_info</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;&#34;&#34;Get offset to a beginning of a particular zip entry
+</span></span></span><span class="line"><span class="cl"><span class="s2">  Args:
+</span></span></span><span class="line"><span class="cl"><span class="s2">    fp: zipfile.ZipFile
+</span></span></span><span class="line"><span class="cl"><span class="s2">    entry_info: zipfile.ZipInfo
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">  Returns:
+</span></span></span><span class="line"><span class="cl"><span class="s2">    (offset, size) tuple
+</span></span></span><span class="line"><span class="cl"><span class="s2">  &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># Don&#39;t use len(entry_info.extra). Because that returns size of extra</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># fields in central directory. We need to look at local file directory,</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># as these two might have different sizes.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1"># We cannot work with zipfile.ZipFile instances, we need a |fp| for the underlying file.</span>
+</span></span><span class="line"><span class="cl">  <span class="n">zfp</span> <span class="o">=</span> <span class="n">zfp</span><span class="o">.</span><span class="n">fp</span>
+</span></span><span class="line"><span class="cl">  <span class="n">zfp</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">entry_info</span><span class="o">.</span><span class="n">header_offset</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">data</span> <span class="o">=</span> <span class="n">zfp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">zipfile</span><span class="o">.</span><span class="n">sizeFileHeader</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">fheader</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">zipfile</span><span class="o">.</span><span class="n">structFileHeader</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># Last two fields of local file header are filename length and</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># extra length</span>
+</span></span><span class="line"><span class="cl">  <span class="n">filename_len</span> <span class="o">=</span> <span class="n">fheader</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="n">extra_len</span> <span class="o">=</span> <span class="n">fheader</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="n">offset</span> <span class="o">=</span> <span class="n">entry_info</span><span class="o">.</span><span class="n">header_offset</span>
+</span></span><span class="line"><span class="cl">  <span class="n">offset</span> <span class="o">+=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">sizeFileHeader</span>
+</span></span><span class="line"><span class="cl">  <span class="n">offset</span> <span class="o">+=</span> <span class="n">filename_len</span> <span class="o">+</span> <span class="n">extra_len</span>
+</span></span><span class="line"><span class="cl">  <span class="n">size</span> <span class="o">=</span> <span class="n">entry_info</span><span class="o">.</span><span class="n">file_size</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ************** merge end *************</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">ComputeEntryOffsetSize</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Computes the zip entry offset and size.&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">info</span> <span class="o">=</span> <span class="n">zip_file</span><span class="o">.</span><span class="n">getinfo</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># offset = info.header_offset + len(info.FileHeader())</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># ************** merge start *************</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># merge 928c234 Allow zip64 support when opening zip files start</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># https://cs.android.com/android/_/android/platform/build/+/928c2341a6abc3b1ddb7ddd7652e78b67c7ef7a9</span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="o">=</span> <span class="n">GetZipEntryOffset</span><span class="p">(</span><span class="n">zip_file</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># offset = info.header_offset + info.filename.__len__() + info.extra.__len__() + 30</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># size = info.file_size</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># ************** merge end *************</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">:</span><span class="si">%d</span><span class="s1">:</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">offset</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="n">payload_info</span> <span class="o">=</span> <span class="n">input_zip</span><span class="o">.</span><span class="n">getinfo</span><span class="p">(</span><span class="s1">&#39;payload.bin&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">    <span class="c1"># ************** merge start *************</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># ---- by Y4944 2023/07/21</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># https://cs.android.com/android/_/android/platform/build/+/928c2341a6abc3b1ddb7ddd7652e78b67c7ef7a9</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># payload_offset = payload_info.header_offset + len(payload_info.FileHeader())</span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="n">payload_offset</span><span class="p">,</span> <span class="n">payload_size</span><span class="p">)</span> <span class="o">=</span> <span class="n">GetZipEntryOffset</span><span class="p">(</span><span class="n">input_zip</span><span class="p">,</span> <span class="n">payload_info</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># payload_offset = payload_info.header_offset + payload_info.filename.__len__() + payload_info.extra.__len__() + 30</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># payload_size = payload_info.file_size</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># ************** merge end *************</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">with</span> <span class="n">input_zip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;payload.bin&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">payload_fp</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">      <span class="n">header_bin</span> <span class="o">=</span> <span class="n">payload_fp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># network byte order (big-endian)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">header</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&#34;!IQQL&#34;</span><span class="p">,</span> <span class="n">header_bin</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># &#39;CrAU&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">magic</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">assert</span> <span class="n">magic</span> <span class="o">==</span> <span class="mh">0x43724155</span><span class="p">,</span> <span class="s2">&#34;Invalid magic: </span><span class="si">{:x}</span><span class="s2">&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">magic</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">manifest_size</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">metadata_signature_size</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">metadata_total</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">+</span> <span class="n">manifest_size</span> <span class="o">+</span> <span class="n">metadata_signature_size</span>
+</span></span><span class="line"><span class="cl">    <span class="k">assert</span> <span class="n">metadata_total</span> <span class="o">&lt;</span> <span class="n">payload_size</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">(</span><span class="n">payload_offset</span><span class="p">,</span> <span class="n">metadata_total</span><span class="p">)</span>
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/android/">Android</a></li>
+      <li><a href="http://localhost:1313/tags/%E5%8D%87%E7%BA%A7/">升级</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/android-module-bluetooth%E8%A2%AB%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Android Module Bluetooth被覆盖问题排查</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/aosp%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B1%E8%84%9A%E6%9C%AC%E7%AF%87/">
+    <span class="title">Next »</span>
+    <br>
+    <span>AOSP编译流程1（脚本篇）</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">The MaxJ Stack</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

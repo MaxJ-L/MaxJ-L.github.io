@@ -6,23 +6,63 @@
     <description>Recent content in Android on The MaxJ Stack</description>
     <generator>Hugo -- 0.147.7</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 21 Sep 2025 02:34:41 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 09 Oct 2025 01:31:59 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/android/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>深入 Binder 核心 (二)：ServiceManager 的角色</title>
-      <link>http://localhost:1313/posts/binder-series-part2/</link>
-      <pubDate>Sun, 21 Sep 2025 02:34:41 +0800</pubDate>
-      <guid>http://localhost:1313/posts/binder-series-part2/</guid>
-      <description>&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;这是第二篇文章的正文...
-&lt;/code&gt;&lt;/pre&gt;</description>
+      <title>CarLauncher显示尺寸不正常</title>
+      <link>http://localhost:1313/posts/carlauncher%E6%98%BE%E7%A4%BA%E5%B0%BA%E5%AF%B8%E4%B8%8D%E6%AD%A3%E5%B8%B8/</link>
+      <pubDate>Thu, 09 Oct 2025 01:31:59 +0800</pubDate>
+      <guid>http://localhost:1313/posts/carlauncher%E6%98%BE%E7%A4%BA%E5%B0%BA%E5%AF%B8%E4%B8%8D%E6%AD%A3%E5%B8%B8/</guid>
+      <description>CarLauncher显示尺寸不正常</description>
     </item>
     <item>
-      <title>深入 Binder 核心 (一)：驱动与基本原理</title>
-      <link>http://localhost:1313/posts/binder-series-part1/</link>
-      <pubDate>Sun, 21 Sep 2025 02:33:41 +0800</pubDate>
-      <guid>http://localhost:1313/posts/binder-series-part1/</guid>
-      <description>&lt;p&gt;文章正文&amp;hellip;&lt;/p&gt;
-&lt;h1 id=&#34;1&#34;&gt;1&lt;/h1&gt;</description>
+      <title>CarLauncher导入到AndroidStudio方法</title>
+      <link>http://localhost:1313/posts/carlauncher%E5%AF%BC%E5%85%A5%E5%88%B0androidstudio%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Thu, 09 Oct 2025 01:30:01 +0800</pubDate>
+      <guid>http://localhost:1313/posts/carlauncher%E5%AF%BC%E5%85%A5%E5%88%B0androidstudio%E6%96%B9%E6%B3%95/</guid>
+      <description>CarLauncher导入到AndroidStudio方法</description>
+    </item>
+    <item>
+      <title>Android9超过2G升级包无法升级问题排查与解决方案</title>
+      <link>http://localhost:1313/posts/android9%E8%B6%85%E8%BF%872g%E5%8D%87%E7%BA%A7%E5%8C%85%E6%97%A0%E6%B3%95%E5%8D%87%E7%BA%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/android9%E8%B6%85%E8%BF%872g%E5%8D%87%E7%BA%A7%E5%8C%85%E6%97%A0%E6%B3%95%E5%8D%87%E7%BA%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</guid>
+      <description>Android9超过2G升级包无法升级问题排查与解决方案</description>
+    </item>
+    <item>
+      <title>CarLauncher can not show wallpaper  CarLauncher无法显示壁纸问题解决</title>
+      <link>http://localhost:1313/posts/carlauncher-can-not-show-wallpaper--carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/carlauncher-can-not-show-wallpaper--carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</guid>
+      <description>CarLauncher can not show wallpaper  CarLauncher无法显示壁纸问题解决</description>
+    </item>
+    <item>
+      <title>CarLauncher无法显示壁纸问题解决 - 主题设置导致</title>
+      <link>http://localhost:1313/posts/carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3---%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E5%AF%BC%E8%87%B4/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3---%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E5%AF%BC%E8%87%B4/</guid>
+      <description>CarLauncher无法显示壁纸问题解决 - 主题设置导致</description>
+    </item>
+    <item>
+      <title>进程接口被频繁调用致CPU占用率过高排查流程</title>
+      <link>http://localhost:1313/posts/%E8%BF%9B%E7%A8%8B%E6%8E%A5%E5%8F%A3%E8%A2%AB%E9%A2%91%E7%B9%81%E8%B0%83%E7%94%A8%E8%87%B4cpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E6%8E%92%E6%9F%A5%E6%B5%81%E7%A8%8B/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/%E8%BF%9B%E7%A8%8B%E6%8E%A5%E5%8F%A3%E8%A2%AB%E9%A2%91%E7%B9%81%E8%B0%83%E7%94%A8%E8%87%B4cpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E6%8E%92%E6%9F%A5%E6%B5%81%E7%A8%8B/</guid>
+      <description>进程接口被频繁调用致CPU占用率过高排查流程</description>
+    </item>
+    <item>
+      <title>Android-15.0.0_r1 lunch无法显示menu.md</title>
+      <link>http://localhost:1313/posts/android-15.0.0_r1-lunch%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BAmenu.md/</link>
+      <pubDate>Tue, 08 Jul 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/android-15.0.0_r1-lunch%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BAmenu.md/</guid>
+      <description>Android-15.0.0_r1 lunch无法显示menu.md</description>
+    </item>
+    <item>
+      <title>Android windowIsTranslucent导致无法切换activity</title>
+      <link>http://localhost:1313/posts/android-windowistranslucent%E5%AF%BC%E8%87%B4%E6%97%A0%E6%B3%95%E5%88%87%E6%8D%A2activity/</link>
+      <pubDate>Thu, 12 Jun 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/android-windowistranslucent%E5%AF%BC%E8%87%B4%E6%97%A0%E6%B3%95%E5%88%87%E6%8D%A2activity/</guid>
+      <description>Android windowIsTranslucent导致无法切换activity</description>
     </item>
   </channel>
 </rss>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Qualcomm on The MaxJ Stack</title>
+    <link>http://localhost:1313/tags/qualcomm/</link>
+    <description>Recent content in Qualcomm on The MaxJ Stack</description>
+    <generator>Hugo -- 0.147.7</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 08 Oct 2025 22:28:30 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/qualcomm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Qualcomm8775 QTIVehicle与原生Vehicle STR问题冲突解决</title>
+      <link>http://localhost:1313/posts/qualcomm8775-qtivehicle%E4%B8%8E%E5%8E%9F%E7%94%9Fvehicle-str%E9%97%AE%E9%A2%98%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/qualcomm8775-qtivehicle%E4%B8%8E%E5%8E%9F%E7%94%9Fvehicle-str%E9%97%AE%E9%A2%98%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3/</guid>
+      <description>Qualcomm8775 QTIVehicle与原生Vehicle STR问题冲突解决</description>
+    </item>
+  </channel>
+</rss>

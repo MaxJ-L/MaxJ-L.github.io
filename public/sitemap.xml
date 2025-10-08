@@ -2,57 +2,120 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:50570/tags/aosp/</loc>
+    <loc>http://localhost:1313/tags/android/</loc>
+    <lastmod>2025-10-09T01:31:59+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/carlauncher%E6%98%BE%E7%A4%BA%E5%B0%BA%E5%AF%B8%E4%B8%8D%E6%AD%A3%E5%B8%B8/</loc>
+    <lastmod>2025-10-09T01:31:59+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2025-10-09T01:31:59+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2025-10-09T01:31:59+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2025-10-09T01:31:59+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/wallpaper/</loc>
+    <lastmod>2025-10-09T01:31:59+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/carlauncher%E5%AF%BC%E5%85%A5%E5%88%B0androidstudio%E6%96%B9%E6%B3%95/</loc>
+    <lastmod>2025-10-09T01:30:01+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/launcher/</loc>
+    <lastmod>2025-10-09T01:30:01+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/android-module-bluetooth%E8%A2%AB%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</loc>
+    <lastmod>2025-10-08T22:28:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/android9%E8%B6%85%E8%BF%872g%E5%8D%87%E7%BA%A7%E5%8C%85%E6%97%A0%E6%B3%95%E5%8D%87%E7%BA%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</loc>
+    <lastmod>2025-10-08T22:28:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/aosp/</loc>
+    <lastmod>2025-10-08T22:28:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/aosp%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B1%E8%84%9A%E6%9C%AC%E7%AF%87/</loc>
+    <lastmod>2025-10-08T22:28:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/carlauncher-can-not-show-wallpaper--carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</loc>
+    <lastmod>2025-10-08T22:28:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3---%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E5%AF%BC%E8%87%B4/</loc>
+    <lastmod>2025-10-08T22:28:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/cpu/</loc>
+    <lastmod>2025-10-08T22:28:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/qualcomm/</loc>
+    <lastmod>2025-10-08T22:28:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/qualcomm8775-qtivehicle%E4%B8%8E%E5%8E%9F%E7%94%9Fvehicle-str%E9%97%AE%E9%A2%98%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3/</loc>
+    <lastmod>2025-10-08T22:28:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/repo-sync%E6%8A%A5%E9%94%99-failing-repos-try-re-running-with--j1---fail-fast-to-exit-at-the-first-error/</loc>
+    <lastmod>2025-10-08T22:28:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/%E5%8D%87%E7%BA%A7/</loc>
+    <lastmod>2025-10-08T22:28:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/%E7%BC%96%E8%AF%91/</loc>
+    <lastmod>2025-10-08T22:28:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/%E8%BF%9B%E7%A8%8B%E6%8E%A5%E5%8F%A3%E8%A2%AB%E9%A2%91%E7%B9%81%E8%B0%83%E7%94%A8%E8%87%B4cpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E6%8E%92%E6%9F%A5%E6%B5%81%E7%A8%8B/</loc>
+    <lastmod>2025-10-08T22:28:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/android-studio%E5%AF%BC%E5%85%A5aosp%E6%BA%90%E7%A0%81/</loc>
+    <lastmod>2025-10-08T12:00:16+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7/</loc>
+    <lastmod>2025-10-08T12:00:16+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/avd/</loc>
     <lastmod>2025-10-01T00:00:00+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:50570/tags/avd/</loc>
+    <loc>http://localhost:1313/posts/%E8%87%AA%E5%AE%9A%E4%B9%89avd%E9%95%9C%E5%83%8F%E6%90%AD%E5%BB%BA%E5%92%8Cavd%E4%B8%8E%E4%B8%BB%E6%9C%BAudp%E9%80%9A%E4%BF%A1/</loc>
     <lastmod>2025-10-01T00:00:00+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:50570/posts/</loc>
-    <lastmod>2025-10-01T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:50570/tags/</loc>
-    <lastmod>2025-10-01T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:50570/</loc>
-    <lastmod>2025-10-01T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:50570/posts/%E8%87%AA%E5%AE%9A%E4%B9%89avd%E9%95%9C%E5%83%8F%E6%90%AD%E5%BB%BA%E5%92%8Cavd%E4%B8%8E%E4%B8%BB%E6%9C%BAudp%E9%80%9A%E4%BF%A1/</loc>
-    <lastmod>2025-10-01T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:50570/tags/wsl2/</loc>
+    <loc>http://localhost:1313/tags/wsl2/</loc>
     <lastmod>2025-09-28T22:28:30+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:50570/tags/%E7%BC%96%E8%AF%91/</loc>
+    <loc>http://localhost:1313/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-ninja-failed-with-signal-killed/</loc>
     <lastmod>2025-09-28T22:28:30+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:50570/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-ninja-failed-with-signal-killed/</loc>
-    <lastmod>2025-09-28T22:28:30+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:50570/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/</loc>
+    <loc>http://localhost:1313/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2025-09-28T22:28:18+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:50570/posts/weekly/2025-week-39/</loc>
+    <loc>http://localhost:1313/posts/weekly/2025-week-39/</loc>
     <lastmod>2025-09-28T08:30:00+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:50570/tags/%E5%91%A8%E6%8A%A5/</loc>
+    <loc>http://localhost:1313/tags/%E5%91%A8%E6%8A%A5/</loc>
     <lastmod>2025-09-28T08:30:00+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:50570/posts/weekly/2025-week-38/</loc>
+    <loc>http://localhost:1313/posts/weekly/2025-week-38/</loc>
     <lastmod>2025-09-21T11:30:27+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:50570/posts/githubpages%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%95%99%E7%A8%8B/</loc>
+    <loc>http://localhost:1313/posts/githubpages%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%95%99%E7%A8%8B/</loc>
     <lastmod>2025-09-21T02:33:41+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:50570/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
+    <loc>http://localhost:1313/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
     <lastmod>2025-09-21T02:33:41+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:50570/archives/</loc>
+    <loc>http://localhost:1313/posts/%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7%E5%BF%AB%E9%80%9F%E6%8B%89%E5%8F%96.repo%E6%90%AD%E5%BB%BA%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/</loc>
+    <lastmod>2025-07-28T22:28:30+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:50570/categories/</loc>
+    <loc>http://localhost:1313/posts/android-15.0.0_r1-lunch%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BAmenu.md/</loc>
+    <lastmod>2025-07-08T22:28:30+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:50570/search/</loc>
+    <loc>http://localhost:1313/posts/android-windowistranslucent%E5%AF%BC%E8%87%B4%E6%97%A0%E6%B3%95%E5%88%87%E6%8D%A2activity/</loc>
+    <lastmod>2025-06-12T22:28:30+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:50570/series/</loc>
+    <loc>http://localhost:1313/archives/</loc>
+  </url><url>
+    <loc>http://localhost:1313/categories/</loc>
+  </url><url>
+    <loc>http://localhost:1313/search/</loc>
+  </url><url>
+    <loc>http://localhost:1313/series/</loc>
   </url>
 </urlset>

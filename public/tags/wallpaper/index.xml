@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Wallpaper on The MaxJ Stack</title>
+    <link>http://localhost:1313/tags/wallpaper/</link>
+    <description>Recent content in Wallpaper on The MaxJ Stack</description>
+    <generator>Hugo -- 0.147.7</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 09 Oct 2025 01:31:59 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/wallpaper/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CarLauncher显示尺寸不正常</title>
+      <link>http://localhost:1313/posts/carlauncher%E6%98%BE%E7%A4%BA%E5%B0%BA%E5%AF%B8%E4%B8%8D%E6%AD%A3%E5%B8%B8/</link>
+      <pubDate>Thu, 09 Oct 2025 01:31:59 +0800</pubDate>
+      <guid>http://localhost:1313/posts/carlauncher%E6%98%BE%E7%A4%BA%E5%B0%BA%E5%AF%B8%E4%B8%8D%E6%AD%A3%E5%B8%B8/</guid>
+      <description>CarLauncher显示尺寸不正常</description>
+    </item>
+    <item>
+      <title>CarLauncher can not show wallpaper  CarLauncher无法显示壁纸问题解决</title>
+      <link>http://localhost:1313/posts/carlauncher-can-not-show-wallpaper--carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/carlauncher-can-not-show-wallpaper--carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</guid>
+      <description>CarLauncher can not show wallpaper  CarLauncher无法显示壁纸问题解决</description>
+    </item>
+    <item>
+      <title>CarLauncher无法显示壁纸问题解决 - 主题设置导致</title>
+      <link>http://localhost:1313/posts/carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3---%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E5%AF%BC%E8%87%B4/</link>
+      <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/carlauncher%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A3%81%E7%BA%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3---%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E5%AF%BC%E8%87%B4/</guid>
+      <description>CarLauncher无法显示壁纸问题解决 - 主题设置导致</description>
+    </item>
+  </channel>
+</rss>
