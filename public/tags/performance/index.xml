@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Performance on The MaxJ Stack</title>
+    <link>http://localhost:1313/tags/performance/</link>
+    <description>Recent content in Performance on The MaxJ Stack</description>
+    <generator>Hugo -- 0.147.7</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Fri, 10 Oct 2025 21:03:37 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/performance/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>高通8775性能测试工具调研</title>
+      <link>http://localhost:1313/posts/%E9%AB%98%E9%80%9A8775%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E8%B0%83%E7%A0%94/</link>
+      <pubDate>Fri, 10 Oct 2025 21:03:37 +0800</pubDate>
+      <guid>http://localhost:1313/posts/%E9%AB%98%E9%80%9A8775%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E8%B0%83%E7%A0%94/</guid>
+      <description>高通8775性能测试工具调研</description>
+    </item>
+  </channel>
+</rss>

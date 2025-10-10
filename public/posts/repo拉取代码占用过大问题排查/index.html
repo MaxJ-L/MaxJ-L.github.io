@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>repo拉取代码占用过大问题排查 | The MaxJ Stack</title>
+<meta name="keywords" content="AOSP, 编译">
+<meta name="description" content="repo拉取代码占用过大问题排查">
+<meta name="author" content="MaxJ-L">
+<link rel="canonical" href="http://localhost:1313/posts/repo%E6%8B%89%E5%8F%96%E4%BB%A3%E7%A0%81%E5%8D%A0%E7%94%A8%E8%BF%87%E5%A4%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.a5a528d13f8d3c68ee890d8e25b5ca6ed04936a57d0603a745e75a4ab6ce5944.css" integrity="sha256-paUo0T&#43;NPGjuiQ2OJbXKbtBJNqV9BgOnRedaSrbOWUQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/repo%E6%8B%89%E5%8F%96%E4%BB%A3%E7%A0%81%E5%8D%A0%E7%94%A8%E8%BF%87%E5%A4%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="The MaxJ Stack (Alt + H)">The MaxJ Stack</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      repo拉取代码占用过大问题排查
+    </h1>
+    <div class="post-meta"><span title='2025-10-10 19:07:17 +0800 CST'>October 10, 2025</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;MaxJ-L
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e9%97%ae%e9%a2%98" aria-label="问题">问题</a></li>
+                <li>
+                    <a href="#%e8%a7%a3%e5%86%b3%e5%8a%9e%e6%b3%95" aria-label="解决办法">解决办法</a></li>
+                <li>
+                    <a href="#%e6%8e%92%e6%9f%a5%e8%bf%87%e7%a8%8b" aria-label="排查过程">排查过程</a></li>
+                <li>
+                    <a href="#%e5%85%b6%e4%bb%96%e7%9a%84%e4%b8%80%e4%ba%9b%e9%97%ae%e9%a2%98" aria-label="其他的一些问题？">其他的一些问题？</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>Date：2024/12/16</p>
+<h2 id="问题">问题<a hidden class="anchor" aria-hidden="true" href="#问题">#</a></h2>
+<p>按照既定教程，repo拉取代码的时候过大，加上生成物后1T磁盘已无法满足，但是存在其他同事代码拉取很小的情况</p>
+<h2 id="解决办法">解决办法<a hidden class="anchor" aria-hidden="true" href="#解决办法">#</a></h2>
+<ul>
+<li>repo init加上&ndash;depth=1参数，进行浅拷贝</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">repo init --current-branch --depth<span class="o">=</span><span class="m">1</span> -u ssh://zliang16@forge.vnet.valeo.com:29418/proj6992_8775_bsp_manifests -m valeo_hqx4560_all.xml --no-clone-bundle --repo-url<span class="o">=</span>https://git.codelinaro.org/clo/la/tools/repo.git --repo-branch<span class="o">=</span>qc-stable
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">repo sync -j32 -c --no-tags
+</span></span></code></pre></div><h2 id="排查过程">排查过程<a hidden class="anchor" aria-hidden="true" href="#排查过程">#</a></h2>
+<ul>
+<li>主要思路是通过对比代码占用很大的工作站（后称大工作站）和代码占用很小的工作站（后称小工作站）进行对比</li>
+</ul>
+<ol>
+<li>Mainifest的Git Log</li>
+</ol>
+<p>大工作站：.repo/mainifests/下面git log仅有1条，且有grafted字样</p>
+<p>小工作站：.repo/mainifests/下面git log有完整历史，没有grafted字样</p>
+<ol start="2">
+<li>grafted字样是什么？</li>
+</ol>
+<ul>
+<li><a href="https://adoyle.me/Today-I-Learned/git/grafted-commit.html">https://adoyle.me/Today-I-Learned/git/grafted-commit.html</a></li>
+<li>![[Pasted image 20250320102120.png]]</li>
+</ul>
+<ol start="3">
+<li>&ndash;depth参数是什么？怎么用？</li>
+</ol>
+<ul>
+<li><a href="https://blog.csdn.net/qq_43827595/article/details/104833980">https://blog.csdn.net/qq_43827595/article/details/104833980</a></li>
+</ul>
+<ol start="4">
+<li>怎么查看大小工作站的depth</li>
+</ol>
+<ul>
+<li>查询AI，无果</li>
+<li>是否为git的配置？如何查看git的配置？</li>
+<li><a href="https://www.cnblogs.com/merray/p/6006411.html">https://www.cnblogs.com/merray/p/6006411.html</a></li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 查看系统配置</span>
+</span></span><span class="line"><span class="cl">git config --system --list
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看当前用户（global）配置</span>
+</span></span><span class="line"><span class="cl">git config --global  --list
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看当前仓库配置信息</span>
+</span></span><span class="line"><span class="cl">git config --local  --list
+</span></span></code></pre></div><ul>
+<li>manifests里面git config &ndash;local &ndash;list，明显看到repo.depth = 1</li>
+<li>repo能否&ndash;depth？&ndash;&gt; 查看&ndash;help</li>
+<li>repo init能， repo sync不能指定</li>
+<li>加一下试试看咯 —&gt; BINGO</li>
+</ul>
+<h2 id="其他的一些问题">其他的一些问题？<a hidden class="anchor" aria-hidden="true" href="#其他的一些问题">#</a></h2>
+<ol>
+<li>如何识别git的浅克隆和深克隆？</li>
+</ol>
+<ul>
+<li>检查.git/shallow，有此文件是浅拷贝，无则深拷贝；</li>
+<li>git rev-parse &ndash;is-shallow-repository，true是浅拷贝，false是深拷贝</li>
+</ul>
+<ol start="2">
+<li>repo如何保证是浅克隆</li>
+</ol>
+<ul>
+<li>添加&ndash;depth=选项（暂时没有找到别的办法了）</li>
+</ul>
+<ol start="3">
+<li>git浅拷贝后 git log只能看到1条日志，如何看到全部日志，但保持浅拷贝？</li>
+</ol>
+<ul>
+<li>方法1：git fetch &ndash;depth=<n></li>
+<li>方法2：git fetch origin &ndash;unshallow</li>
+</ul>
+<ol start="4">
+<li>浅克隆和深克隆的区别和定义</li>
+</ol>
+<ul>
+<li>
+<p>浅克隆（Shallow Clone）：</p>
+<ul>
+<li>定义：浅克隆是指在克隆 Git 仓库时，仅获取指定数量的最近提交，而不获取完整的提交历史。通常通过 &ndash;depth 选项来指定克隆的深度；</li>
+<li>使用场景：浅克隆适用于需要快速获取代码进行构建或测试，但不需要完整历史记录的场合。例如，在 CI/CD 环境中，通常只关心最新的代码而不需要历史提交。</li>
+</ul>
+</li>
+<li>
+<p>深克隆（Deep Clone）：</p>
+<ul>
+<li>定义：深克隆是指在克隆 Git 仓库时，获取整个仓库的完整提交历史。没有使用 &ndash;depth 选项；</li>
+<li>使用场景：深克隆适用于需要完整历史记录的场合，如开发和调试时，开发者可能需要查看项目的历史变更和提交。</li>
+</ul>
+</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/aosp/">AOSP</a></li>
+      <li><a href="http://localhost:1313/tags/%E7%BC%96%E8%AF%91/">编译</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-forkexec-.buildbazelbinbazel-no-such-file-or-directory/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>编译报错 fork/exec ./build/bazel/bin/bazel: no such file or directory</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/%E8%BF%90%E8%A1%8C%E6%8A%A5%E9%94%99signature-privileged-permissions-not-in-privapp-permissions-allowlist/">
+    <span class="title">Next »</span>
+    <br>
+    <span>运行报错：Signature Privileged Permissions Not in Privapp Permissions Allowlist</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">The MaxJ Stack</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

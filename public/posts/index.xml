@@ -6,8 +6,78 @@
     <description>Recent content in Posts on The MaxJ Stack</description>
     <generator>Hugo -- 0.147.7</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 09 Oct 2025 01:31:59 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 10 Oct 2025 21:03:37 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>高通8775性能测试工具调研</title>
+      <link>http://localhost:1313/posts/%E9%AB%98%E9%80%9A8775%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E8%B0%83%E7%A0%94/</link>
+      <pubDate>Fri, 10 Oct 2025 21:03:37 +0800</pubDate>
+      <guid>http://localhost:1313/posts/%E9%AB%98%E9%80%9A8775%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E8%B0%83%E7%A0%94/</guid>
+      <description>高通8775性能测试工具调研</description>
+    </item>
+    <item>
+      <title>Error Visibility Attribute Ignored When Parsing Type  Werror, Wignored Attributes</title>
+      <link>http://localhost:1313/posts/error-visibility-attribute-ignored-when-parsing-type--werror-wignored-attributes/</link>
+      <pubDate>Fri, 10 Oct 2025 21:02:08 +0800</pubDate>
+      <guid>http://localhost:1313/posts/error-visibility-attribute-ignored-when-parsing-type--werror-wignored-attributes/</guid>
+      <description>Error Visibility Attribute Ignored When Parsing Type  Werror, Wignored Attributes</description>
+    </item>
+    <item>
+      <title>libncurses5编译报错</title>
+      <link>http://localhost:1313/posts/libncurses5%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99/</link>
+      <pubDate>Fri, 10 Oct 2025 20:59:54 +0800</pubDate>
+      <guid>http://localhost:1313/posts/libncurses5%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99/</guid>
+      <description>libncurses5编译报错</description>
+    </item>
+    <item>
+      <title>Android CameraServer导致无法开机问题</title>
+      <link>http://localhost:1313/posts/android-cameraserver%E5%AF%BC%E8%87%B4%E6%97%A0%E6%B3%95%E5%BC%80%E6%9C%BA%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Fri, 10 Oct 2025 19:10:12 +0800</pubDate>
+      <guid>http://localhost:1313/posts/android-cameraserver%E5%AF%BC%E8%87%B4%E6%97%A0%E6%B3%95%E5%BC%80%E6%9C%BA%E9%97%AE%E9%A2%98/</guid>
+      <description>Android CameraServer导致无法开机问题</description>
+    </item>
+    <item>
+      <title>Too Many Binders Sent to SYSTEM</title>
+      <link>http://localhost:1313/posts/too-many-binders-sent-to-system/</link>
+      <pubDate>Fri, 10 Oct 2025 19:10:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/too-many-binders-sent-to-system/</guid>
+      <description>Too Many Binders Sent to SYSTEM</description>
+    </item>
+    <item>
+      <title>编译报错 fork/exec ./build/bazel/bin/bazel: no such file or directory</title>
+      <link>http://localhost:1313/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-forkexec-.buildbazelbinbazel-no-such-file-or-directory/</link>
+      <pubDate>Fri, 10 Oct 2025 19:07:27 +0800</pubDate>
+      <guid>http://localhost:1313/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-forkexec-.buildbazelbinbazel-no-such-file-or-directory/</guid>
+      <description>编译报错 fork/exec ./build/bazel/bin/bazel: no such file or directory</description>
+    </item>
+    <item>
+      <title>repo拉取代码占用过大问题排查</title>
+      <link>http://localhost:1313/posts/repo%E6%8B%89%E5%8F%96%E4%BB%A3%E7%A0%81%E5%8D%A0%E7%94%A8%E8%BF%87%E5%A4%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</link>
+      <pubDate>Fri, 10 Oct 2025 19:07:17 +0800</pubDate>
+      <guid>http://localhost:1313/posts/repo%E6%8B%89%E5%8F%96%E4%BB%A3%E7%A0%81%E5%8D%A0%E7%94%A8%E8%BF%87%E5%A4%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</guid>
+      <description>repo拉取代码占用过大问题排查</description>
+    </item>
+    <item>
+      <title>运行报错：Signature Privileged Permissions Not in Privapp Permissions Allowlist</title>
+      <link>http://localhost:1313/posts/%E8%BF%90%E8%A1%8C%E6%8A%A5%E9%94%99signature-privileged-permissions-not-in-privapp-permissions-allowlist/</link>
+      <pubDate>Fri, 10 Oct 2025 19:06:55 +0800</pubDate>
+      <guid>http://localhost:1313/posts/%E8%BF%90%E8%A1%8C%E6%8A%A5%E9%94%99signature-privileged-permissions-not-in-privapp-permissions-allowlist/</guid>
+      <description>运行报错：Signature Privileged Permissions Not in Privapp Permissions Allowlist</description>
+    </item>
+    <item>
+      <title>Kotlin版本冲突报错 Duplicate Class</title>
+      <link>http://localhost:1313/posts/kotlin%E7%89%88%E6%9C%AC%E5%86%B2%E7%AA%81%E6%8A%A5%E9%94%99-duplicate-class/</link>
+      <pubDate>Fri, 10 Oct 2025 19:06:19 +0800</pubDate>
+      <guid>http://localhost:1313/posts/kotlin%E7%89%88%E6%9C%AC%E5%86%B2%E7%AA%81%E6%8A%A5%E9%94%99-duplicate-class/</guid>
+      <description>Kotlin版本冲突报错 Duplicate Class</description>
+    </item>
+    <item>
+      <title>error use of dynamic_cast requires -frtti</title>
+      <link>http://localhost:1313/posts/error-use-of-dynamic_cast-requires--frtti/</link>
+      <pubDate>Fri, 10 Oct 2025 18:28:18 +0800</pubDate>
+      <guid>http://localhost:1313/posts/error-use-of-dynamic_cast-requires--frtti/</guid>
+      <description>error use of dynamic_cast requires -frtti</description>
+    </item>
     <item>
       <title>CarLauncher显示尺寸不正常</title>
       <link>http://localhost:1313/posts/carlauncher%E6%98%BE%E7%A4%BA%E5%B0%BA%E5%AF%B8%E4%B8%8D%E6%AD%A3%E5%B8%B8/</link>
@@ -65,11 +135,11 @@
       <description>Qualcomm8775 QTIVehicle与原生Vehicle STR问题冲突解决</description>
     </item>
     <item>
-      <title>Repo sync报错 Failing Repos Try re-running with -j1 --fail-fast to exit at the first error</title>
+      <title>repo sync报错 Failing Repos Try re-running with -j1 --fail-fast to exit at the first error</title>
       <link>http://localhost:1313/posts/repo-sync%E6%8A%A5%E9%94%99-failing-repos-try-re-running-with--j1---fail-fast-to-exit-at-the-first-error/</link>
       <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
       <guid>http://localhost:1313/posts/repo-sync%E6%8A%A5%E9%94%99-failing-repos-try-re-running-with--j1---fail-fast-to-exit-at-the-first-error/</guid>
-      <description>Repo sync报错 Failing Repos Try re-running with -j1 &amp;ndash;fail-fast to exit at the first error</description>
+      <description>repo sync报错 Failing Repos Try re-running with -j1 &amp;ndash;fail-fast to exit at the first error</description>
     </item>
     <item>
       <title>进程接口被频繁调用致CPU占用率过高排查流程</title>

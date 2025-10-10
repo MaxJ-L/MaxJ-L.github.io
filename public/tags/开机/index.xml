@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>开机 on The MaxJ Stack</title>
+    <link>http://localhost:1313/tags/%E5%BC%80%E6%9C%BA/</link>
+    <description>Recent content in 开机 on The MaxJ Stack</description>
+    <generator>Hugo -- 0.147.7</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Fri, 10 Oct 2025 19:10:12 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%E5%BC%80%E6%9C%BA/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Android CameraServer导致无法开机问题</title>
+      <link>http://localhost:1313/posts/android-cameraserver%E5%AF%BC%E8%87%B4%E6%97%A0%E6%B3%95%E5%BC%80%E6%9C%BA%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Fri, 10 Oct 2025 19:10:12 +0800</pubDate>
+      <guid>http://localhost:1313/posts/android-cameraserver%E5%AF%BC%E8%87%B4%E6%97%A0%E6%B3%95%E5%BC%80%E6%9C%BA%E9%97%AE%E9%A2%98/</guid>
+      <description>Android CameraServer导致无法开机问题</description>
+    </item>
+  </channel>
+</rss>

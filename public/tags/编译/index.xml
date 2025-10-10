@@ -6,8 +6,43 @@
     <description>Recent content in 编译 on The MaxJ Stack</description>
     <generator>Hugo -- 0.147.7</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 08 Oct 2025 22:28:30 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 10 Oct 2025 21:02:08 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/%E7%BC%96%E8%AF%91/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Error Visibility Attribute Ignored When Parsing Type  Werror, Wignored Attributes</title>
+      <link>http://localhost:1313/posts/error-visibility-attribute-ignored-when-parsing-type--werror-wignored-attributes/</link>
+      <pubDate>Fri, 10 Oct 2025 21:02:08 +0800</pubDate>
+      <guid>http://localhost:1313/posts/error-visibility-attribute-ignored-when-parsing-type--werror-wignored-attributes/</guid>
+      <description>Error Visibility Attribute Ignored When Parsing Type  Werror, Wignored Attributes</description>
+    </item>
+    <item>
+      <title>libncurses5编译报错</title>
+      <link>http://localhost:1313/posts/libncurses5%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99/</link>
+      <pubDate>Fri, 10 Oct 2025 20:59:54 +0800</pubDate>
+      <guid>http://localhost:1313/posts/libncurses5%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99/</guid>
+      <description>libncurses5编译报错</description>
+    </item>
+    <item>
+      <title>编译报错 fork/exec ./build/bazel/bin/bazel: no such file or directory</title>
+      <link>http://localhost:1313/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-forkexec-.buildbazelbinbazel-no-such-file-or-directory/</link>
+      <pubDate>Fri, 10 Oct 2025 19:07:27 +0800</pubDate>
+      <guid>http://localhost:1313/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-forkexec-.buildbazelbinbazel-no-such-file-or-directory/</guid>
+      <description>编译报错 fork/exec ./build/bazel/bin/bazel: no such file or directory</description>
+    </item>
+    <item>
+      <title>repo拉取代码占用过大问题排查</title>
+      <link>http://localhost:1313/posts/repo%E6%8B%89%E5%8F%96%E4%BB%A3%E7%A0%81%E5%8D%A0%E7%94%A8%E8%BF%87%E5%A4%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</link>
+      <pubDate>Fri, 10 Oct 2025 19:07:17 +0800</pubDate>
+      <guid>http://localhost:1313/posts/repo%E6%8B%89%E5%8F%96%E4%BB%A3%E7%A0%81%E5%8D%A0%E7%94%A8%E8%BF%87%E5%A4%A7%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</guid>
+      <description>repo拉取代码占用过大问题排查</description>
+    </item>
+    <item>
+      <title>error use of dynamic_cast requires -frtti</title>
+      <link>http://localhost:1313/posts/error-use-of-dynamic_cast-requires--frtti/</link>
+      <pubDate>Fri, 10 Oct 2025 18:28:18 +0800</pubDate>
+      <guid>http://localhost:1313/posts/error-use-of-dynamic_cast-requires--frtti/</guid>
+      <description>error use of dynamic_cast requires -frtti</description>
+    </item>
     <item>
       <title>Android Module Bluetooth被覆盖问题排查</title>
       <link>http://localhost:1313/posts/android-module-bluetooth%E8%A2%AB%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</link>
@@ -23,11 +58,11 @@
       <description>AOSP编译流程1（脚本篇）</description>
     </item>
     <item>
-      <title>Repo sync报错 Failing Repos Try re-running with -j1 --fail-fast to exit at the first error</title>
+      <title>repo sync报错 Failing Repos Try re-running with -j1 --fail-fast to exit at the first error</title>
       <link>http://localhost:1313/posts/repo-sync%E6%8A%A5%E9%94%99-failing-repos-try-re-running-with--j1---fail-fast-to-exit-at-the-first-error/</link>
       <pubDate>Wed, 08 Oct 2025 22:28:30 +0800</pubDate>
       <guid>http://localhost:1313/posts/repo-sync%E6%8A%A5%E9%94%99-failing-repos-try-re-running-with--j1---fail-fast-to-exit-at-the-first-error/</guid>
-      <description>Repo sync报错 Failing Repos Try re-running with -j1 &amp;ndash;fail-fast to exit at the first error</description>
+      <description>repo sync报错 Failing Repos Try re-running with -j1 &amp;ndash;fail-fast to exit at the first error</description>
     </item>
     <item>
       <title>编译报错 Ninja Failed With Signal Killed</title>

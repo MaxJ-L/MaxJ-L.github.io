@@ -1,9 +1,9 @@
 +++
 date = '2025-10-08T22:28:30+08:00'
 draft = false
-title = 'Repo sync报错 Failing Repos Try re-running with -j1 --fail-fast to exit at the first error'
+title = 'repo sync报错 Failing Repos Try re-running with -j1 --fail-fast to exit at the first error'
 tags = ['AOSP', '编译']
-summary= "Repo sync报错 Failing Repos Try re-running with -j1 --fail-fast to exit at the first error"
+summary= "repo sync报错 Failing Repos Try re-running with -j1 --fail-fast to exit at the first error"
 
 +++
 
