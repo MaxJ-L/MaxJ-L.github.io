@@ -7,7 +7,7 @@ summary= "运行报错：Signature Privileged Permissions Not in Privapp Permiss
 
 +++
 
-Signature privileged permissions not in privapp-permissions allowlist{com.android.car.carlauncher (systempriv-appValeoCarLauncher.apk) android.permission.SET_WALLPAPER_COMPONENT}
+Signature privileged permissions not in privapp-permissions allowlist{com.android.car.carlauncher (systempriv-appCarLauncher.apk) android.permission.SET_WALLPAPER_COMPONENT}
 
 ![Pasted image 20250320102029](./Pasted%20image%2020250320102029.png)
 

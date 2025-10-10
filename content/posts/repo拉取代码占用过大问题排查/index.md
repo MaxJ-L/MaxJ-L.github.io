@@ -17,7 +17,7 @@ Date：2024/12/16
 - repo init加上--depth=1参数，进行浅拷贝
 
 ```shell
-repo init --current-branch --depth=1 -u ssh://zliang16@forge.vnet.valeo.com:29418/proj6992_8775_bsp_manifests -m valeo_hqx4560_all.xml --no-clone-bundle --repo-url=https://git.codelinaro.org/clo/la/tools/repo.git --repo-branch=qc-stable
+repo init --current-branch --depth=1 -u <url> -m mainifest.xml --no-clone-bundle --repo-url=https://git.codelinaro.org/clo/la/tools/repo.git --repo-branch=qc-stable
 
 repo sync -j32 -c --no-tags
 ```

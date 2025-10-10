@@ -126,7 +126,7 @@ Alternate instructions:
 #### 可以做什么？
 + 没有详细的user guide文档，以下摘自 80-72626-100 一段翻译：
 ```
-sysMonApp 是一个 QNX 可执行文件，它通过 FastRPC 与 aDSP、cDSP、mDSP、sDSP 或 NPU 子系统上的 Q6 进行交互，并为用户提供分析 Q6 工作负载、获取时钟信息、设置或删除核心和总线时钟、获取软件线程信息以及获取软件线程级配置文件统计信息等功能。
+valeosysMonApp 是一个 QNX 可执行文件，它通过 FastRPC 与 aDSP、cDSP、mDSP、sDSP 或 NPU 子系统上的 Q6 进行交互，并为用户提供分析 Q6 工作负载、获取时钟信息、设置或删除核心和总线时钟、获取软件线程信息以及获取软件线程级配置文件统计信息等功能。
 
 支持的作系统包括 LA GVM、LA metal、QNX 和 HGY。
 
