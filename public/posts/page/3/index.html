@@ -100,17 +100,17 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/archives/" title="归档">
+                <a href="http://localhost:1313/archives" title="归档">
                     <span>归档</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                <a href="http://localhost:1313/search" title="搜索 (Alt &#43; /)" accesskey=/>
                     <span>搜索</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="标签">
+                <a href="http://localhost:1313/tags" title="标签">
                     <span>标签</span>
                 </a>
             </li>
@@ -123,6 +123,30 @@
     Posts
   </h1>
 </header>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">repo sync报错 Failing Repos Try re-running with -j1 --fail-fast to exit at the first error
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>repo sync报错 Failing Repos Try re-running with -j1 –fail-fast to exit at the first error</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-08 22:28:30 +0800 CST'>October 8, 2025</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;MaxJ-L</footer>
+  <a class="entry-link" aria-label="post link to repo sync报错 Failing Repos Try re-running with -j1 --fail-fast to exit at the first error" href="http://localhost:1313/posts/repo-sync%E6%8A%A5%E9%94%99-failing-repos-try-re-running-with--j1---fail-fast-to-exit-at-the-first-error/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">进程接口被频繁调用致CPU占用率过高排查流程
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>进程接口被频繁调用致CPU占用率过高排查流程</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-08 22:28:30 +0800 CST'>October 8, 2025</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;MaxJ-L</footer>
+  <a class="entry-link" aria-label="post link to 进程接口被频繁调用致CPU占用率过高排查流程" href="http://localhost:1313/posts/%E8%BF%9B%E7%A8%8B%E6%8E%A5%E5%8F%A3%E8%A2%AB%E9%A2%91%E7%B9%81%E8%B0%83%E7%94%A8%E8%87%B4cpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E6%8E%92%E6%9F%A5%E6%B5%81%E7%A8%8B/"></a>
+</article>
 
 <article class="post-entry"> 
   <header class="entry-header">
@@ -169,7 +193,7 @@
     <p>WSL2编译AOSP的笔记</p>
   </div>
   <footer class="entry-footer"><span title='2025-09-28 22:28:18 +0800 CST'>September 28, 2025</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;MaxJ-L</footer>
-  <a class="entry-link" aria-label="post link to WLS2编译AOSP笔记" href="http://localhost:1313/posts/wls2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/"></a>
+  <a class="entry-link" aria-label="post link to WLS2编译AOSP笔记" href="http://localhost:1313/posts/wsl2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -186,6 +210,51 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Snippets
+      <span class="entry-hint" title="Draft">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" fill="currentColor">
+          <path
+            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+        </svg>
+      </span>
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Snippets 开启WSL2 好的，没问题。
+这里为您整理了一份从零开始，在 Windows 上开启 WSL2 并用上 Ubuntu 的完整核心流程。
+Windows 启用 WSL2 并安装 Ubuntu 完整流程 第 1 步：开启 Windows 核心功能 (一键完成) 这是最关键的一步，现在微软已经把所有需要的操作都集成到了一条命令里。
+以 管理员身份 打开 PowerShell。
+方法：在开始菜单搜索 “PowerShell”，右键点击，选择“以管理员身份运行”。 在 PowerShell 窗口中，输入以下命令并回车：
+PowerShell
+wsl --install 这条命令会自动帮你完成以下所有事情：
+开启 “虚拟机平台” 功能。 开启 “适用于 Linux 的 Windows 子系统” 功能。 下载并安装 最新版的 Linux 内核。 设置 WSL2 为默认版本。 从微软商店下载并安装 最新版的 Ubuntu 发行版。 命令运行完毕后，重启你的电脑。
+第 2 步：初始化 Ubuntu 重启电脑后，系统可能会自动启动 Ubuntu 窗口进行最后的安装。 如果没有，就从 开始菜单 找到并打开 Ubuntu。 第一次启动时，它会提示你 “Installing, this may take a few minutes…&#34;。 安装完成后，会要求你创建一个 Unix 用户名和密码。 注意：这个密码是你在 Ubuntu 环境里使用 sudo 命令时需要的，输入时屏幕上不会显示，这是正常的。 创建完成后，你就正式进入了 Ubuntu 的命令行环境！
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-22 23:56:20 +0800 CST'>September 22, 2025</span>&nbsp;·&nbsp;17 min&nbsp;·&nbsp;MaxJ-L</footer>
+  <a class="entry-link" aria-label="post link to Snippets" href="http://localhost:1313/posts/snippets/snippets/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">LINUX编译笔记
+      <span class="entry-hint" title="Draft">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" fill="currentColor">
+          <path
+            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+        </svg>
+      </span>
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>使用WSL Ubuntu编译LINUX并用QEMU加载镜像</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-22 02:15:29 +0800 CST'>September 22, 2025</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;MaxJ-L</footer>
+  <a class="entry-link" aria-label="post link to LINUX编译笔记" href="http://localhost:1313/posts/linux%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">2025 Week 38
     </h2>
   </header>
@@ -195,58 +264,12 @@
   <footer class="entry-footer"><span title='2025-09-21 11:30:27 +0800 CST'>September 21, 2025</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;MaxJ-L</footer>
   <a class="entry-link" aria-label="post link to 2025 Week 38" href="http://localhost:1313/posts/weekly/2025-week-38/"></a>
 </article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">GithubPages搭建个人博客教程
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Hugo &#43; GitHub Pages 博客搭建全攻略：从入门到自动化部署（含踩坑笔记）</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-09-21 02:33:41 +0800 CST'>September 21, 2025</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;MaxJ-L</footer>
-  <a class="entry-link" aria-label="post link to GithubPages搭建个人博客教程" href="http://localhost:1313/posts/githubpages%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%95%99%E7%A8%8B/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">开发技巧：快速拉取.repo搭建编译环境
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>开发技巧：快速拉取.repo搭建编译环境</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-28 22:28:30 +0800 CST'>July 28, 2025</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;MaxJ-L</footer>
-  <a class="entry-link" aria-label="post link to 开发技巧：快速拉取.repo搭建编译环境" href="http://localhost:1313/posts/%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7%E5%BF%AB%E9%80%9F%E6%8B%89%E5%8F%96.repo%E6%90%AD%E5%BB%BA%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Android-15.0.0_r1 lunch无法显示menu.md
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Android-15.0.0_r1 lunch无法显示menu.md</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-08 22:28:30 +0800 CST'>July 8, 2025</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;MaxJ-L</footer>
-  <a class="entry-link" aria-label="post link to Android-15.0.0_r1 lunch无法显示menu.md" href="http://localhost:1313/posts/android-15.0.0_r1-lunch%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BAmenu.md/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Android windowIsTranslucent导致无法切换activity
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Android windowIsTranslucent导致无法切换activity</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-06-12 22:28:30 +0800 CST'>June 12, 2025</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;MaxJ-L</footer>
-  <a class="entry-link" aria-label="post link to Android windowIsTranslucent导致无法切换activity" href="http://localhost:1313/posts/android-windowistranslucent%E5%AF%BC%E8%87%B4%E6%97%A0%E6%B3%95%E5%88%87%E6%8D%A2activity/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="http://localhost:1313/posts/page/2/">
       «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="http://localhost:1313/posts/page/4/">Next&nbsp;&nbsp;»
     </a>
   </nav>
 </footer>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>WLS2编译AOSP笔记 | The MaxJ Stack</title>
+<meta name="keywords" content="AOSP, WSL2, 编译">
+<meta name="description" content="WSL2编译AOSP的笔记">
+<meta name="author" content="MaxJ-L">
+<link rel="canonical" href="http://localhost:1313/posts/wsl2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.a5a528d13f8d3c68ee890d8e25b5ca6ed04936a57d0603a745e75a4ab6ce5944.css" integrity="sha256-paUo0T&#43;NPGjuiQ2OJbXKbtBJNqV9BgOnRedaSrbOWUQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/wsl2%E7%BC%96%E8%AF%91aosp%E7%AC%94%E8%AE%B0/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="The MaxJ Stack (Alt + H)">The MaxJ Stack</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      WLS2编译AOSP笔记
+    </h1>
+    <div class="post-meta"><span title='2025-09-28 22:28:18 +0800 CST'>September 28, 2025</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;MaxJ-L
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#wsl2%e7%bc%96%e8%af%91aosp%e7%ac%94%e8%ae%b0" aria-label="WSL2编译AOSP笔记">WSL2编译AOSP笔记</a><ul>
+                        
+                <li>
+                    <a href="#%e7%9b%b8%e5%85%b3%e6%a6%82%e5%bf%b5" aria-label="相关概念">相关概念</a></li>
+                <li>
+                    <a href="#%e6%ad%a5%e9%aa%a4" aria-label="步骤">步骤</a><ul>
+                        
+                <li>
+                    <a href="#wsl2%e5%ae%89%e8%a3%85%e5%92%8c%e5%88%9d%e5%a7%8b%e5%8c%96" aria-label="WSL2安装和初始化">WSL2安装和初始化</a><ul>
+                        
+                <li>
+                    <a href="#%e5%ae%89%e8%a3%85" aria-label="安装">安装</a></li>
+                <li>
+                    <a href="#ubuntu%e5%88%9d%e5%a7%8b%e5%8c%96" aria-label="Ubuntu初始化">Ubuntu初始化</a></li>
+                <li>
+                    <a href="#%e9%aa%8c%e8%af%81wsl%e7%89%88%e6%9c%ac" aria-label="验证WSL版本">验证WSL版本</a></li></ul>
+                </li>
+                <li>
+                    <a href="#aosp%e4%b8%8b%e8%bd%bd%e5%92%8c%e7%bc%96%e8%af%91" aria-label="AOSP下载和编译">AOSP下载和编译</a><ul>
+                        
+                <li>
+                    <a href="#%e5%ae%89%e8%a3%85%e6%89%80%e9%9c%80%e8%bd%af%e4%bb%b6" aria-label="安装所需软件">安装所需软件</a></li>
+                <li>
+                    <a href="#%e5%ae%89%e8%a3%85repo" aria-label="安装repo">安装repo</a></li>
+                <li>
+                    <a href="#%e4%b8%8b%e8%bd%bd%e6%ba%90%e7%a0%81" aria-label="下载源码">下载源码</a></li>
+                <li>
+                    <a href="#%e7%bc%96%e8%af%91%e6%ba%90%e7%a0%81" aria-label="编译源码">编译源码</a></li>
+                <li>
+                    <a href="#%e5%90%af%e5%8a%a8" aria-label="启动">启动</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="wsl2编译aosp笔记">WSL2编译AOSP笔记<a hidden class="anchor" aria-hidden="true" href="#wsl2编译aosp笔记">#</a></h1>
+<blockquote>
+<p>学了这么久，虽然是已经非常熟练的操作，但还是需要记录一下&hellip;</p>
+<p>为什么选择WSL2，不选择VMWare，因为VMWare占用的资源太大了，WSL2对比下来，发现轻松很多。而且也方便用AS等软件直接打开源码。</p></blockquote>
+<h2 id="相关概念">相关概念<a hidden class="anchor" aria-hidden="true" href="#相关概念">#</a></h2>
+<ol>
+<li>WSL2，Windows Subsystem for Linux，Windows操作系统上的一个功能，用来允许在Windows运行Linux环境；</li>
+<li>AOSP，额看这篇笔记的应该都懂，Android Open Source Project， 主要指Android开源代码；</li>
+</ol>
+<h2 id="步骤">步骤<a hidden class="anchor" aria-hidden="true" href="#步骤">#</a></h2>
+<h3 id="wsl2安装和初始化">WSL2安装和初始化<a hidden class="anchor" aria-hidden="true" href="#wsl2安装和初始化">#</a></h3>
+<h4 id="安装">安装<a hidden class="anchor" aria-hidden="true" href="#安装">#</a></h4>
+<ol>
+<li>
+<p>以 <strong>管理员身份</strong> 打开 <strong>PowerShell</strong>。</p>
+<ul>
+<li><em>方法：在开始菜单搜索 &ldquo;PowerShell&rdquo;，右键点击，选择“以管理员身份运行”。</em></li>
+</ul>
+</li>
+<li>
+<p>在 PowerShell 窗口中，输入以下命令并回车：</p>
+<p>PowerShell</p>
+<pre tabindex="0"><code>wsl --install
+</code></pre><p>这条命令会自动帮你完成以下所有事情：</p>
+<ul>
+<li><strong>开启</strong> “虚拟机平台” 功能。</li>
+<li><strong>开启</strong> “适用于 Linux 的 Windows 子系统” 功能。</li>
+<li><strong>下载并安装</strong> 最新版的 Linux 内核。</li>
+<li><strong>设置 WSL2</strong> 为默认版本。</li>
+<li><strong>从微软商店下载并安装</strong> 最新版的 Ubuntu 发行版。</li>
+</ul>
+</li>
+<li>
+<p>命令运行完毕后，<strong>重启电脑</strong>。</p>
+</li>
+</ol>
+<h4 id="ubuntu初始化">Ubuntu初始化<a hidden class="anchor" aria-hidden="true" href="#ubuntu初始化">#</a></h4>
+<ol>
+<li>搜索打开Ubuntu，或者在Terminal选项中打开；</li>
+<li>第一次启动会提示：&ldquo;Installing, this may take a few minutes&hellip;&quot;；</li>
+<li>安装完成后，创建<strong>初始账号和密码</strong>；</li>
+</ol>
+<h4 id="验证wsl版本">验证WSL版本<a hidden class="anchor" aria-hidden="true" href="#验证wsl版本">#</a></h4>
+<ol>
+<li>打开<strong>PowerShell</strong>，输入以下</li>
+</ol>
+<pre tabindex="0"><code>wsl -l -v
+</code></pre><ol start="2">
+<li>你会看到类似输出：</li>
+</ol>
+<pre tabindex="0"><code>  NAME      STATE           VERSION
+* Ubuntu    Running         2
+</code></pre><ul>
+<li>
+<p>如果 <code>VERSION</code> 列显示为 <strong><code>2</code></strong>，说明一切正常，你已经成功用上了 WSL2。</p>
+</li>
+<li>
+<p><strong>【转换操作】</strong> 如果 <code>VERSION</code> 列显示为 <strong><code>1</code></strong>，说明这是一个 WSL1 的旧实例，你需要手动将其<strong>转换</strong>为 WSL2。执行以下命令即可：</p>
+<p>PowerShell</p>
+<pre tabindex="0"><code># 把 &#34;Ubuntu&#34; 替换成你列表中显示的名字
+wsl --set-version Ubuntu 2
+</code></pre><p>等待转换完成后，你的 Ubuntu 就成功升级到 WSL2 了。</p>
+</li>
+</ul>
+<hr>
+<h3 id="aosp下载和编译">AOSP下载和编译<a hidden class="anchor" aria-hidden="true" href="#aosp下载和编译">#</a></h3>
+<blockquote>
+<p>参考官网：<a href="https://source.android.com/docs/setup/start">Try Android development  | Android Open Source Project</a></p></blockquote>
+<h4 id="安装所需软件">安装所需软件<a hidden class="anchor" aria-hidden="true" href="#安装所需软件">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt-get install git-core gnupg flex bison build-essential zip curl zlib1g-dev libc6-dev-i386 x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig
+</span></span></code></pre></div><blockquote>
+<p>注意一下，需要每个都安装成功</p></blockquote>
+<h4 id="安装repo">安装repo<a hidden class="anchor" aria-hidden="true" href="#安装repo">#</a></h4>
+<p>安装repo有2种方式，一种是直接<code>sudo apt install repo</code>，但是一般这样安装，repo的版本都比较低，我一般通过源码进行安装；</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">REPO</span><span class="o">=</span><span class="k">$(</span>mktemp /tmp/repo.XXXXXXXXX<span class="k">)</span>
+</span></span><span class="line"><span class="cl">curl -o <span class="si">${</span><span class="nv">REPO</span><span class="si">}</span> https://storage.googleapis.com/git-repo-downloads/repo
+</span></span><span class="line"><span class="cl">gpg --recv-keys 8BB9AD793E8E6153AF0F9A4416530D5E920F5C65
+</span></span><span class="line"><span class="cl">curl -s https://storage.googleapis.com/git-repo-downloads/repo.asc <span class="p">|</span> gpg --verify - <span class="si">${</span><span class="nv">REPO</span><span class="si">}</span> <span class="o">&amp;&amp;</span> install -m <span class="m">755</span> <span class="si">${</span><span class="nv">REPO</span><span class="si">}</span> ~/bin/repo
+</span></span></code></pre></div><p>查看repo版本</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">repo version
+</span></span></code></pre></div><h4 id="下载源码">下载源码<a hidden class="anchor" aria-hidden="true" href="#下载源码">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">repo init --partial-clone -b android-latest-release -u https://android.googlesource.com/platform/manifest
+</span></span><span class="line"><span class="cl"><span class="c1"># 这里是android新出的manifest名称，用android-latest-release替代main，来代表最新的释放版本；</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 也可以通过AOSP官网查看其他manifest分支</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># --partial-clone 这个选项是Android用来替代--depth=1选项的，这个会智能地下载历史记录，但不会立马下载一些非必要的文件，只有在真正下载用到的时候才会进行下载源码</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">repo sync -c --no-tags --prune -j16
+</span></span></code></pre></div><h4 id="编译源码">编译源码<a hidden class="anchor" aria-hidden="true" href="#编译源码">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">source</span> build/envsetup.sh
+</span></span><span class="line"><span class="cl">lunch &lt;COMBO&gt;
+</span></span><span class="line"><span class="cl"><span class="c1"># COMBO一般我编译sdk_car_x86_64-aosp_current-eng</span>
+</span></span><span class="line"><span class="cl">m -j32
+</span></span><span class="line"><span class="cl"><span class="c1"># -j是线程数，看你自己的CPU来确定，如果线程数太高，可能会编译失败，甚至ninja由于线程数过高直接被kill掉，这种情况连报错都不会显示</span>
+</span></span></code></pre></div><h4 id="启动">启动<a hidden class="anchor" aria-hidden="true" href="#启动">#</a></h4>
+<p>emulator即可。需要注意，如果只是输入emulator，它会根据环境变量去找对应的镜像，需要先source envsetup.sh和lunch；</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">emulator
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/aosp/">AOSP</a></li>
+      <li><a href="http://localhost:1313/tags/wsl2/">WSL2</a></li>
+      <li><a href="http://localhost:1313/tags/%E7%BC%96%E8%AF%91/">编译</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99-ninja-failed-with-signal-killed/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>编译报错 Ninja Failed With Signal Killed</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/weekly/2025-week-39/">
+    <span class="title">Next »</span>
+    <br>
+    <span>2025 Week 39</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">The MaxJ Stack</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

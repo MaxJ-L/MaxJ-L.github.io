@@ -6,8 +6,22 @@
     <description>Recent content in Tags on The MaxJ Stack</description>
     <generator>Hugo -- 0.147.7</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 10 Oct 2025 21:03:37 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 23 Dec 2025 21:30:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>思维与方法</title>
+      <link>http://localhost:1313/tags/%E6%80%9D%E7%BB%B4%E4%B8%8E%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Tue, 23 Dec 2025 21:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%80%9D%E7%BB%B4%E4%B8%8E%E6%96%B9%E6%B3%95/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>外语</title>
+      <link>http://localhost:1313/tags/%E5%A4%96%E8%AF%AD/</link>
+      <pubDate>Fri, 10 Oct 2025 21:26:30 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%A4%96%E8%AF%AD/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Performance</title>
       <link>http://localhost:1313/tags/performance/</link>
@@ -118,6 +132,13 @@
       <link>http://localhost:1313/tags/%E5%91%A8%E6%8A%A5/</link>
       <pubDate>Sun, 28 Sep 2025 08:30:00 +0800</pubDate>
       <guid>http://localhost:1313/tags/%E5%91%A8%E6%8A%A5/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>LINUX</title>
+      <link>http://localhost:1313/tags/linux/</link>
+      <pubDate>Mon, 22 Sep 2025 02:15:29 +0800</pubDate>
+      <guid>http://localhost:1313/tags/linux/</guid>
       <description></description>
     </item>
     <item>

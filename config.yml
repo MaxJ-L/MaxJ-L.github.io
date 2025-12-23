@@ -14,15 +14,15 @@ menu:
   main:
     - identifier: archives
       name: "归档"         # 显示“归档”
-      url: "/archives/"
+      url: "/archives"
       weight: 10
     - identifier: search
       name: "搜索"         # 显示“搜索”
-      url: "/search/"
+      url: "/search"
       weight: 20
     - identifier: tags
       name: "标签"         # 显示“标签”
-      url: "/tags/"
+      url: "/tags"
       weight: 30
 
 # --- 输出配置 (为了搜索功能) ---

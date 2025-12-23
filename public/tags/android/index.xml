@@ -65,6 +65,13 @@
       <description>进程接口被频繁调用致CPU占用率过高排查流程</description>
     </item>
     <item>
+      <title>ActivityManagerService源码解析</title>
+      <link>http://localhost:1313/activitymanagerservice%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Sun, 21 Sep 2025 03:52:16 +0800</pubDate>
+      <guid>http://localhost:1313/activitymanagerservice%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</guid>
+      <description>ActivityManagerService源码解析</description>
+    </item>
+    <item>
       <title>Android-15.0.0_r1 lunch无法显示menu.md</title>
       <link>http://localhost:1313/posts/android-15.0.0_r1-lunch%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BAmenu.md/</link>
       <pubDate>Tue, 08 Jul 2025 22:28:30 +0800</pubDate>
